@@ -14,7 +14,7 @@
 #define QUANT_h 1//1.05457173e-34
 #define QUANT_m 1//1.67262178e-27
 #define QUANT_w 1
-#define CENTRE_POU 2.0
+#define CENTRE_POU 1.5
 
 #define F(i,j) f[(fstruct.xdim*(j)+(i))]
 
@@ -97,7 +97,7 @@ int main(int argc, char* argv[]){
     //print_qwave2D(stdout,f,&fstruct);
 
 
-    CrNi2D_wf(f,V,V,U,&fstruct,stdout);
+    CrNi2D_wf(f,Vx,V,U,&fstruct,stdout);
     
     //fprintf(stderr,"CALCULATING TRAJECTORY: phase=%g r=%g\n",fac,r[1]);
     //CrNi2D_tr(r,f,V,V,U,&fstruct,0);

@@ -469,7 +469,7 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
         *t += (dt);
         k++;
         /* Print wavefunction */
-        if (k % 20 == 0)
+        if (k % 10 == 0)
             print_qwave2D(output,psi,prm);
         
     }
