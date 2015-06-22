@@ -360,7 +360,7 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
         for (i=0; i<xdim; i++) {
             for (j=0; j<ydim; j++) {
                 BETAX(i,j) = I*dt*VX(i,j)/(2.*QUANT_h);
-                BETAY(i,j) = I*dt*Vy(i,j)/(2.*QUANT_h);
+                BETAY(i,j) = I*dt*VY(i,j)/(2.*QUANT_h);
             }
         }
 
@@ -409,7 +409,7 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
             
             
             for (j=0; j<ydim; j++){
-                BETAY(i,j) = I*dt*Vy(i,j)/(2.*QUANT_h);
+                BETAY(i,j) = I*dt*VY(i,j)/(2.*QUANT_h);
                 B[j] = 1+2*alpha_y+BETAY(i,j);
             }
             /* Solve the tridiagonal system */
@@ -573,7 +573,7 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
         for (i=0; i<xdim; i++) {
             for (j=0; j<ydim; j++) {
                 BETAX(i,j) = dt*VX(i,j)/(2.*QUANT_h);
-                BETAY(i,j) = dt*Vy(i,j)/(2.*QUANT_h);
+                BETAY(i,j) = dt*VY(i,j)/(2.*QUANT_h);
             }
         }
 
@@ -622,7 +622,7 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
             
             
             for (j=0; j<ydim; j++){
-                BETAY(i,j) = dt*Vy(i,j)/(2.*QUANT_h);
+                BETAY(i,j) = dt*VY(i,j)/(2.*QUANT_h);
                 B[j] = 1+2*alpha_y+BETAY(i,j);
             }
             /* Solve the tridiagonal system */
