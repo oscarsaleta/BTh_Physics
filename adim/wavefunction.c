@@ -82,8 +82,8 @@ int main(int argc, char* argv[]){
     
     fprintf(stderr,"Calculating time evolution...\n");
     //CrNi2Dexact(r,f,V,V,U,&fstruct);
-    //CrNi2D_tr(r,f,V,V,U,&fstruct,0);
-    CrNi2D_wf(f,V,V,U,&fstruct,stdout);
+    CrNi2D_tr(r,f,V,V,U,&fstruct,0);
+    //CrNi2D_wf(f,V,V,U,&fstruct,stdout);
     fprintf(stderr,"Done.\n");
 
 

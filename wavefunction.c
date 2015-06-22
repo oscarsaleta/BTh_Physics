@@ -97,10 +97,10 @@ int main(int argc, char* argv[]){
     //print_qwave2D(stdout,f,&fstruct);
 
 
-    CrNi2D_wf(f,Vx,V,U,&fstruct,stdout);
+    //CrNi2D_wf(f,Vx,V,U,&fstruct,stdout);
     
     //fprintf(stderr,"CALCULATING TRAJECTORY: phase=%g r=%g\n",fac,r[1]);
-    //CrNi2D_tr(r,f,V,V,U,&fstruct,0);
+    CrNi2D_tr(r,f,Vx,V,U,&fstruct,0);
     //CrNi2Dexact(r,f,V,V,U,&fstruct,0);
 
     /*for (k=0; k<(int)(tmax/dt); k++) {
