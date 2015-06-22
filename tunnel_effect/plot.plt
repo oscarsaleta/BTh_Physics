@@ -13,8 +13,8 @@ set xrange [-8:8]
 set yrange [-8:8]
 #set size ratio -1
 
-set object 1 circle at first -1.5,0 size first 1.5 front lc rgb "green"
-set object 2 circle at first -1.5,0 size first 1.5 front lc rgb "green"
+set object 1 circle at first -1.5,0 size first 1.5 front fc rgb "green" fs transparent solid
+set object 2 circle at first 1.5,0 size first 1.5 front fc rgb "green" fs transparent solid
 
 set multiplot layout 2,2 title "Tunneling effect in a double harmonic trap"
 
