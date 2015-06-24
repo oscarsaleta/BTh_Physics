@@ -1104,7 +1104,6 @@ void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), 
      * The main loop runs over the whole time domain of the problem.
      * */
     while (*t < t_max) {
-        fprintf(stderr,"wf:: t = %10.6G\n",*t);
 
         for(k=0;k<2;k++) {
             current_psi = psivec[k];

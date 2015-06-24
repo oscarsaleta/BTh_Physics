@@ -71,8 +71,8 @@ int main(int argc, char* argv[]){
     /* Initial State */ 
     for (i=0; i<fstruct.xdim; i++) {
         for (j=0; j<fstruct.ydim; j++) {
-            F(i,j) = stateZero2D(fstruct.x[i],fstruct.y[j],x0,y0);
-            //F(i,j) = stateZeroOne(fstruct.x[i],fstruct.y[j],fac);
+            //F(i,j) = stateZero2D(fstruct.x[i],fstruct.y[j],x0,y0);
+            F(i,j) = stateZeroOne(fstruct.x[i],fstruct.y[j],fac);
             //F(i,j) = 1/sqrt(2.)*(stateZero(fstruct.x[i],-CENTRE_POU,0)*stateOne(fstruct.y[j],0)
             //        + cexp(2*M_PI*I*fac)*stateZero(fstruct.y[j],0,0)*stateOne(fstruct.x[i],-CENTRE_POU));
             //F(i,j) = (stateZero(fstruct.x[i],x0,0)*stateOne(fstruct.y[j]));
@@ -108,17 +108,15 @@ complex double stateZero2D(double x, double y, double x0, double y0) {
 }
 
 complex double stateZeroOne(double x, double y, double fase) {
-    return stateZero(x,0)*stateOne(y,0)+exp(I*2*M_PI*fase)*stateZero(y,0)*stateOne(x,0);
+    return 1./sqrt(2.)*(stateZero(x,0)*stateOne(y,0)+exp(I*2*M_PI*fase)*stateZero(y,0)*stateOne(x,0));
 }
 
 complex double stateZero(double x, double x0) {
-    complex double fx = exp(-((x-x0)*(x-x0))*0.5);
-    return 1./sqrt(sqrt(M_PI))*fx;
+    return 1./sqrt(sqrt(M_PI))*exp(-0.5*((x-x0)*(x-x0)));
 }
 
 complex double stateOne(double x, double x0) {
-    complex double fx = sqrt(2.)*(x-x0)*exp(-((x-x0)*(x-x0))*0.5);
-    return sqrt(sqrt(1/M_PI))*fx;
+    return sqrt(2./sqrt(M_PI))*(x-x0)*exp(-0.5*(x-x0)*(x-x0));
 }
 
 #undef F
