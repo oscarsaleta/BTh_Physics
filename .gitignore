@@ -1,3 +1,5 @@
 wavefunction
+*.pdf
+*.eps
 *.o
 *.dat

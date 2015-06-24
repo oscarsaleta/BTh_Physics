@@ -81,7 +81,7 @@ int main(int argc, char* argv[]){
     //print_qwave2D(stdout,f,&fstruct);
     
     fprintf(stderr,"Calculating time evolution...\n");
-    //CrNi2Dexact(r,f,V,V,U,&fstruct);
+    fprintf(stderr,"r=(%g,%g)\n",r[0],r[1]);
     CrNi2D_tr(r,f,V,V,U,&fstruct,0);
     //CrNi2D_wf(f,V,V,U,&fstruct,stdout);
     fprintf(stderr,"Done.\n");
@@ -108,7 +108,7 @@ complex double stateZero2D(double x, double y, double x0, double y0) {
 }
 
 complex double stateZeroOne(double x, double y, double fase) {
-    return 1./sqrt(2.)*(stateZero(x,0)*stateOne(y,0)+exp(I*2*M_PI*fase)*stateZero(y,0)*stateOne(x,0));
+    return 1./sqrt(2.)*(stateZero(x,0)*stateOne(y,0)+cexp(I*2*M_PI*fase)*stateZero(y,0)*stateOne(x,0));
 }
 
 complex double stateZero(double x, double x0) {

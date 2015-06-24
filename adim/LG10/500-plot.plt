@@ -1,5 +1,5 @@
 reset
-set terminal postscript color enhanced
+set terminal postscript eps color enhanced solid
 set output "plot-500.eps"
 
 set view map
@@ -8,6 +8,8 @@ set key textcolor rgb "white"
 unset key
 set xrange [-2.1:2.1]
 set yrange [-2.1:2.1]
+#set palette grey negative
+#set palette defined (0 "white", 0.15 "orange", 0.3 "red")
 splot "500-wf.dat" u 1:2:3 w pm3d,\
       "500-3.dat" u 1:2:(0.0) w l title "(0.0,0.03)",\
       "500-4.dat" u 1:2:(0.0) w l title "(0.0,0.04)",\
