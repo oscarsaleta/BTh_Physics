@@ -1,4 +1,7 @@
 wavefunction
+main_Lm
+main_L
+wf-plots
 *.pdf
 *.eps
 *.o

@@ -8,7 +8,9 @@ set xlabel 'Time'
 set xrange [0:10]
 set ylabel 'Position'
 
-set grid
+set grid lc rgb "#808080" lt 0 lw 1
+
+set object 1 rectangle from screen 0,0 to screen 1,1 fillcolor rgb "#FFFFFF" behind
 
 plot 'traj-10.dat' u 3:1 title 'x_{(-2.5,0)}' w l lw 2, '' u 3:2 title 'y_{(-2.5,0)}' w l lw 2,\
      'traj00.dat' u 3:1 title 'x_{(-1.5,0)}' w l lw 2, '' u 3:2 title 'y_{(-1.5,0)}' w l lw 2,\
