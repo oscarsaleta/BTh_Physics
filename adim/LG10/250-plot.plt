@@ -6,8 +6,8 @@ set view map
 set size ratio -1
 set key textcolor rgb "white"
 unset key
-set xrange [-2.1:2.1]
-set yrange [-2.1:2.1]
+set xrange [-3.1:3.1]
+set yrange [-3.1:3.1]
 #set palette grey negative
 #set palette defined (0 "white", 0.15 "orange", 0.3 "red")
 splot "250-wf.dat" u 1:2:3 w pm3d,\

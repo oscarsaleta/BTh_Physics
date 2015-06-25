@@ -11,12 +11,6 @@ set yrange [-3.1:3.1]
 #set palette grey negative
 #set palette defined (0 "white", 0.15 "orange", 0.3 "red")
 splot "500-wf.dat" u 1:2:3 w pm3d,\
-      "500-3.dat" u 1:2:(0.0) w l title "(0.0,0.03)",\
-      "500-4.dat" u 1:2:(0.0) w l title "(0.0,0.04)",\
-      "500-5.dat" u 1:2:(0.0) w l title "(0.0,0.05)",\
-      "500-6.dat" u 1:2:(0.0) w l title "(0.0,0.06)",\
-      "500-7.dat" u 1:2:(0.0) w l title "(0.0,0.07)",\
-      "500-8.dat" u 1:2:(0.0) w l title "(0.0,0.08)",\
       "500-9.dat" u 1:2:(0.0) w l title "(0.0,0.09)",\
       "500-10.dat" u 1:2:(0.0) w l title "(0.0,0.10)",\
       "500-11.dat" u 1:2:(0.0) w l title "(0.0,0.11)",\
@@ -27,7 +21,14 @@ splot "500-wf.dat" u 1:2:3 w pm3d,\
       "500-16.dat" u 1:2:(0.0) w l title "(0.0,0.16)",\
       "500-17.dat" u 1:2:(0.0) w l title "(0.0,0.17)",\
       "500-18.dat" u 1:2:(0.0) w l title "(0.0,0.18)",\
-      "500-19.dat" u 1:2:(0.0) w l title "(0.0,0.19)"
+      "500-19.dat" u 1:2:(0.0) w l title "(0.0,0.19)",\
+      "500-20.dat" u 1:2:(0.0) w l title "(0.0,0.20)",\
+      "500-21.dat" u 1:2:(0.0) w l title "(0.0,0.21)",\
+      "500-22.dat" u 1:2:(0.0) w l title "(0.0,0.22)",\
+      "500-23.dat" u 1:2:(0.0) w l title "(0.0,0.23)",\
+      "500-24.dat" u 1:2:(0.0) w l title "(0.0,0.24)",\
+      "500-25.dat" u 1:2:(0.0) w l title "(0.0,0.25)",\
+      "500-26.dat" u 1:2:(0.0) w l title "(0.0,0.26)"
 
 system("epstopdf plot-500.eps")
 

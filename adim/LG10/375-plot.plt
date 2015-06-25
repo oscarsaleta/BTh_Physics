@@ -1,13 +1,13 @@
 reset
-set terminal postscript color enhanced solid
+set terminal postscript eps color enhanced solid
 set output "plot-375.eps"
 
 set view map
 set size ratio -1
 set key textcolor rgb "white"
 unset key
-set xrange [-2.1:2.1]
-set yrange [-2.1:2.1]
+set xrange [-3.1:3.1]
+set yrange [-3.1:3.1]
 splot "375-wf.dat" u 1:2:3 w pm3d,\
       "375-3.dat" u 1:2:(0.0) w l title "(0.0,0.03)",\
       "375-4.dat" u 1:2:(0.0) w l title "(0.0,0.04)",\

@@ -21,6 +21,7 @@ complex double stateZero2D(double x, double y, double x0, double y0);
 complex double stateZeroOne(double x, double y, double fase);
 complex double stateZero(double x, double x0);
 complex double stateOne(double x, double x0);
+complex double stateTwoZero(double x, double y);
 
 int main(int argc, char* argv[]){
 
@@ -73,16 +74,14 @@ int main(int argc, char* argv[]){
         for (j=0; j<fstruct.ydim; j++) {
             //F(i,j) = stateZero2D(fstruct.x[i],fstruct.y[j],x0,y0);
             F(i,j) = stateZeroOne(fstruct.x[i],fstruct.y[j],fac);
-            //F(i,j) = 1/sqrt(2.)*(stateZero(fstruct.x[i],-CENTRE_POU,0)*stateOne(fstruct.y[j],0)
-            //        + cexp(2*M_PI*I*fac)*stateZero(fstruct.y[j],0,0)*stateOne(fstruct.x[i],-CENTRE_POU));
-            //F(i,j) = (stateZero(fstruct.x[i],x0,0)*stateOne(fstruct.y[j]));
+            //F(i,j) = stateTwoZero(fstruct.x[i],fstruct.y[j]);
         }
     }
-    //print_qwave2D(stdout,f,&fstruct);
+    print_qwave2D(stdout,f,&fstruct);
     
-    fprintf(stderr,"Calculating time evolution...\n");
-    fprintf(stderr,"r=(%g,%g)\n",r[0],r[1]);
-    CrNi2D_tr(r,f,V,V,U,&fstruct,0);
+    //fprintf(stderr,"Calculating time evolution...\n");
+    //fprintf(stderr,"r=(%g,%g)\n",r[0],r[1]);
+    //CrNi2D_tr(r,f,V,V,U,&fstruct,0);
     //CrNi2D_wf(f,V,V,U,&fstruct,stdout);
     fprintf(stderr,"Done.\n");
 
@@ -117,6 +116,10 @@ complex double stateZero(double x, double x0) {
 
 complex double stateOne(double x, double x0) {
     return sqrt(2./sqrt(M_PI))*(x-x0)*exp(-0.5*(x-x0)*(x-x0));
+}
+
+complex double stateTwoZero(double x, double y) {
+    return 1/sqrt(2*M_PI)*(x+I*y)*(x+I*y)*exp(-0.5*(x*x+y*y));
 }
 
 #undef F
