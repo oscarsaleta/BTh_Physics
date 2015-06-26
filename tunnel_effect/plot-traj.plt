@@ -5,7 +5,7 @@ set terminal postscript eps color enhanced solid
 set output 'tunnel-tr.eps'
 set key outside
 set xlabel 'Time'
-set xrange [0:20]
+set xrange [0:40]
 set ylabel 'Position'
 
 
