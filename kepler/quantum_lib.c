@@ -147,7 +147,7 @@ void bohm_vel2D(double *v, complex double *psi,  double *position, State *prm){
     
     if (cabs(psi_aux[1]) > 1e-30){
         dpsi = (psi_aux[2]-psi_aux[0])/(2.*dx);
-        vel[0] = cimag(dpsi/psi_aux[1]);
+        vel[0] = QUANT_h/QUANT_m*cimag(dpsi/psi_aux[1]);
     }else
         vel[0] = 0;
 
@@ -162,7 +162,7 @@ void bohm_vel2D(double *v, complex double *psi,  double *position, State *prm){
     
     if(cabs(psi_aux[1]) > 1e-30){
         dpsi = (psi_aux[2]-psi_aux[0])/(2.*dx);
-        vel[1] = cimag(dpsi/psi_aux[1]);
+        vel[1] = QUANT_h/QUANT_m*cimag(dpsi/psi_aux[1]);
     }else
         vel[1] = 0;
 
@@ -177,7 +177,7 @@ void bohm_vel2D(double *v, complex double *psi,  double *position, State *prm){
     
     if(cabs(psi_aux[1]) > 1e-30){
         dpsi = (psi_aux[2]-psi_aux[0])/(2.*dx);
-        vel[2] = cimag(dpsi/psi_aux[1]);
+        vel[2] = QUANT_h/QUANT_m*cimag(dpsi/psi_aux[1]);
     }else
         vel[2] = 0;
 
@@ -192,7 +192,7 @@ void bohm_vel2D(double *v, complex double *psi,  double *position, State *prm){
     
     if(cabs(psi_aux[1]) > 1e-30){
         dpsi = (psi_aux[2]-psi_aux[0])/(2.*dx);
-        vel[3] = cimag(dpsi/psi_aux[1]);
+        vel[3] = QUANT_h/QUANT_m*cimag(dpsi/psi_aux[1]);
     }else
         vel[3] = 0;
 
@@ -213,7 +213,7 @@ void bohm_vel2D(double *v, complex double *psi,  double *position, State *prm){
     
     if(cabs(psi_aux[1]) > 1e-30){
         dpsi = (psi_aux[2]-psi_aux[0])/(2.*dy);
-        vel[0] = cimag(dpsi/psi_aux[1]);
+        vel[0] = QUANT_h/QUANT_m*cimag(dpsi/psi_aux[1]);
     }else
         vel[0] = 0;
 
@@ -228,7 +228,7 @@ void bohm_vel2D(double *v, complex double *psi,  double *position, State *prm){
     
     if(cabs(psi_aux[1]) > 1e-30){
         dpsi = (psi_aux[2]-psi_aux[0])/(2.*dy);
-        vel[1] = cimag(dpsi/psi_aux[1]);
+        vel[1] = QUANT_h/QUANT_m*cimag(dpsi/psi_aux[1]);
     }else
         vel[1] = 0;
 
@@ -243,7 +243,7 @@ void bohm_vel2D(double *v, complex double *psi,  double *position, State *prm){
     
     if(cabs(psi_aux[1]) > 1e-30){
         dpsi = (psi_aux[2]-psi_aux[0])/(2.*dy);
-        vel[2] = cimag(dpsi/psi_aux[1]);
+        vel[2] = QUANT_h/QUANT_m*cimag(dpsi/psi_aux[1]);
     }else
         vel[2] = 0;
 
@@ -258,7 +258,7 @@ void bohm_vel2D(double *v, complex double *psi,  double *position, State *prm){
     
     if(cabs(psi_aux[1]) > 1e-30){
         dpsi = (psi_aux[2]-psi_aux[0])/(2.*dy);
-        vel[3] = cimag(dpsi/psi_aux[1]);
+        vel[3] = QUANT_h/QUANT_m*cimag(dpsi/psi_aux[1]);
     }else
         vel[3] = 0;
 
@@ -323,6 +323,7 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
     psi_aux = (complex double *)malloc(max*sizeof(complex double)); assert(psi_aux != NULL);
     gamma = (complex double *)malloc(max*sizeof(complex double)); assert(gamma != NULL);
 
+
     /* Initial potential (it may not vary over time) so we calculate it first */
     for (i=0; i<xdim; i++) {
         for (j=0; j<ydim; j++) {
@@ -345,10 +346,10 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
      * The main loop runs over the whole time domain of the problem.
      * */
     while (*t < t_max) {
-        //fprintf(stderr,"wf:: t = %10.6G\n",*t);
+        fprintf(stderr,"wf:: t = %10.6G\n",*t);
 
-        alpha_x = I*dt/(8*dx*dx); /*We're applying only 1/2 of H_x in each x loop*/
-        alpha_y = I*dt/(4*dy*dy);
+        alpha_x = I*QUANT_h*dt/(8*QUANT_m*dx*dx); /*We're applying only 1/2 of H_x in each x loop*/
+        alpha_y = I*QUANT_h*dt/(4*QUANT_m*dy*dy);
         for (i=0; i<xdim; i++)
             A_x[i] = -alpha_x;
         
@@ -358,8 +359,8 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
 
         for (i=0; i<xdim; i++) {
             for (j=0; j<ydim; j++) {
-                BETAX(i,j) = I*dt*x[i]*x[i]*0.125;
-                BETAY(i,j) = I*dt*y[j]*y[j]*0.25;
+                BETAX(i,j) = I*dt*VX(i,j)/(2.*QUANT_h);
+                BETAY(i,j) = I*dt*VY(i,j)/(2.*QUANT_h);
             }
         }
 
@@ -373,7 +374,7 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
             r[xdim-1] = (1-2*alpha_x-BETAX(xdim-1,j))*psi_aux[xdim-1]+alpha_x*psi_aux[xdim-2];
             
             for(i=0;i<xdim;i++){
-                BETAX(i,j) = I*dt*x[i]*x[i]*0.125;
+                BETAX(i,j) = I*dt*VX(i,j)/(2.*QUANT_h);
                 B[i] = 1+2*alpha_x+BETAX(i,j);
             }
             /* Solve the tridiagonal system */
@@ -408,7 +409,7 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
             
             
             for (j=0; j<ydim; j++){
-                BETAY(i,j) = I*dt*y[j]*y[j]*0.25;
+                BETAY(i,j) = I*dt*VY(i,j)/(2.*QUANT_h);
                 B[j] = 1+2*alpha_y+BETAY(i,j);
             }
             /* Solve the tridiagonal system */
@@ -441,7 +442,7 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
             
             
             for(i=0;i<xdim;i++){
-                BETAX(i,j) = I*dt*x[i]*x[i]*0.125;
+                BETAX(i,j) = I*dt*VX(i,j)/(2.*QUANT_h);
                 B[i] = 1+2*alpha_x+BETAX(i,j);
             }
             /* Solve the tridiagonal system */
@@ -468,7 +469,7 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
         *t += (dt);
         k++;
         /* Print wavefunction */
-        if (k % 5== 0)
+        if (k % 10 == 0)
             print_qwave2D(output,psi,prm);
         
     }
@@ -560,8 +561,8 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
      * */
     for (k=0; k<maxit; k++) {
 
-        alpha_x = dt/(8*dx*dx); /*We're applying only 1/2 of H_x in each x loop*/
-        alpha_y = dt/(4*dy*dy);
+        alpha_x = QUANT_h*dt/(8*QUANT_m*dx*dx); /*We're applying only 1/2 of H_x in each x loop*/
+        alpha_y = QUANT_h*dt/(4*QUANT_m*dy*dy);
         for (i=0; i<xdim; i++)
             A_x[i] = -alpha_x;
         
@@ -571,8 +572,8 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
 
         for (i=0; i<xdim; i++) {
             for (j=0; j<ydim; j++) {
-                BETAX(i,j) = dt*x[i]*x[i]*0.25;
-                BETAY(i,j) = dt*y[j]*y[j]*0.25;
+                BETAX(i,j) = dt*VX(i,j)/(2.*QUANT_h);
+                BETAY(i,j) = dt*VY(i,j)/(2.*QUANT_h);
             }
         }
 
@@ -586,7 +587,7 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
             r[xdim-1] = (1-2*alpha_x-BETAX(xdim-1,j))*psi_aux[xdim-1]+alpha_x*psi_aux[xdim-2];
             
             for(i=0;i<xdim;i++){
-                BETAX(i,j) = dt*x[i]*x[i]*0.25;
+                BETAX(i,j) = dt*VX(i,j)/(2.*QUANT_h);
                 B[i] = 1+2*alpha_x+BETAX(i,j);
             }
             /* Solve the tridiagonal system */
@@ -621,7 +622,7 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
             
             
             for (j=0; j<ydim; j++){
-                BETAY(i,j) = dt*y[j]*y[j]*0.25;
+                BETAY(i,j) = dt*VY(i,j)/(2.*QUANT_h);
                 B[j] = 1+2*alpha_y+BETAY(i,j);
             }
             /* Solve the tridiagonal system */
@@ -654,7 +655,7 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
             
             
             for(i=0;i<xdim;i++){
-                BETAX(i,j) = dt*x[i]*x[i]*0.25;
+                BETAX(i,j) = dt*VX(i,j)/(2.*QUANT_h);
                 B[i] = 1+2*alpha_x+BETAX(i,j);
             }
             /* Solve the tridiagonal system */
@@ -734,7 +735,7 @@ void wf_static01 (complex double *psia, complex double *psib, double t, State *p
  *         1 if potential depends on time
  *  prm = pointer to struct with program parameters
  */
-void CrNi2Dexact (double *pos, complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), State *prm) {
+void CrNi2Dexact (double *pos, complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), State *prm, int flag) {
     /*Reading the struct*/
     double *x = prm->x;
     double *y = prm->y;
@@ -823,8 +824,8 @@ void CrNi2Dexact (double *pos, complex double *psi, double (*Vx)(double, double)
             for(k=0;k<5;k++) {
                 current_psi = psivec[k];
 
-                alpha_x = I*(*dt)*dtcoef[k]/(8*dx*dx); /*We're applying only 1/2 of H_x in each x loop*/
-                alpha_y = I*(*dt)*dtcoef[k]/(4*dy*dy);
+                alpha_x = I*QUANT_h*(*dt)*dtcoef[k]/(8*QUANT_m*dx*dx); /*We're applying only 1/2 of H_x in each x loop*/
+                alpha_y = I*QUANT_h*(*dt)*dtcoef[k]/(4*QUANT_m*dy*dy);
                 for (i=0; i<xdim; i++)
                     A_x[i] = -alpha_x;
                 
@@ -832,11 +833,19 @@ void CrNi2Dexact (double *pos, complex double *psi, double (*Vx)(double, double)
                     A_y[j] = -alpha_y;
 
     
+                if(flag == 1){
+                    for (i=0; i<xdim; i++) {
+                        for (j=0; j<ydim; j++) {
+                            VX(i,j) = 0.5*(*Vx)(x[i],*t) + 0.25*(*U)(x[i],y[j],*t);
+                            VY(i,j) = (*Vy)(y[j],*t) + 0.5*(*U)(x[i],y[j],*t);
+                        }
+                    }
+                }
     
                 for (i=0; i<xdim; i++) {
                     for (j=0; j<ydim; j++) {
-                        BETAX(i,j) = I*(*dt)*dtcoef[k]*x[i]*x[i]*0.125;
-                        BETAY(i,j) = I*(*dt)*dtcoef[k]*y[j]*y[j]*0.25;
+                        BETAX(i,j) = I*(*dt)*dtcoef[k]*VX(i,j)/(2.*QUANT_h);
+                        BETAY(i,j) = I*(*dt)*dtcoef[k]*VY(i,j)/(2.*QUANT_h);
                     }
                 }
 
@@ -849,9 +858,12 @@ void CrNi2Dexact (double *pos, complex double *psi, double (*Vx)(double, double)
                     r[0] = (1-2*alpha_x-BETAX(0,j))*psi_aux[0]+alpha_x*psi_aux[1];
                     r[xdim-1] = (1-2*alpha_x-BETAX(xdim-1,j))*psi_aux[xdim-1]+alpha_x*psi_aux[xdim-2];
                     
+                    if(flag == 1)
+                        for(i=0;i<xdim;i++)
+                            VX(i,j) = 0.5*(*Vx)(x[i],*t+(*dt)*0.5*dtcoef[k]) + 0.25*(*U)(x[i],y[j],*t+(*dt)*0.5*dtcoef[k]);
                     
                     for(i=0;i<xdim;i++){
-                        BETAX(i,j) = I*(*dt)*dtcoef[k]*x[i]*x[i]*0.125;
+                        BETAX(i,j) = I*(*dt)*dtcoef[k]*VX(i,j)/(2.*QUANT_h);
                         B[i] = 1+2*alpha_x+BETAX(i,j);
                     }
                     /* Solve the tridiagonal system */
@@ -884,9 +896,12 @@ void CrNi2Dexact (double *pos, complex double *psi, double (*Vx)(double, double)
                     r[0] = (1-2*alpha_y-BETAY(i,0))*psi_aux[0]+alpha_y*psi_aux[1];
                     r[ydim-1] = (1-2*alpha_y-BETAY(i,ydim-1))*psi_aux[ydim-1]+alpha_y*psi_aux[ydim-2];
                     
+                    if(flag == 1)
+                        for (j=0; j<ydim; j++)
+                            VY(i,j) = (*Vy)(y[j],*t+(*dt)*dtcoef[k]) + 0.5*(*U)(x[i],y[j],*t+(*dt)*dtcoef[k]);
                     
                     for (j=0; j<ydim; j++){
-                        BETAY(i,j) = I*(*dt)*dtcoef[k]*y[j]*y[j]*0.25;
+                        BETAY(i,j) = I*(*dt)*dtcoef[k]*VY(i,j)/(2.*QUANT_h);
                         B[j] = 1+2*alpha_y+BETAY(i,j);
                     }
                     /* Solve the tridiagonal system */
@@ -917,9 +932,12 @@ void CrNi2Dexact (double *pos, complex double *psi, double (*Vx)(double, double)
                     r[0] = (1-2*alpha_x-BETAX(0,j))*psi_aux[0]+alpha_x*psi_aux[1];
                     r[xdim-1] = (1-2*alpha_x-BETAX(xdim-1,j))*psi_aux[xdim-1]+alpha_x*psi_aux[xdim-2];
                     
+                    if(flag == 1)
+                        for(i=0;i<xdim;i++)
+                            VX(i,j) = 0.5*(*Vx)(x[i],*t+(*dt)*dtcoef[k]) + 0.25*(*U)(x[i],y[j],*t+(*dt)*dtcoef[k]);
                     
                     for(i=0;i<xdim;i++){
-                        BETAX(i,j) = I*(*dt)*dtcoef[k]*x[i]*x[i]*0.125;
+                        BETAX(i,j) = I*(*dt)*dtcoef[k]*VX(i,j)/(2.*QUANT_h);
                         B[i] = 1+2*alpha_x+BETAX(i,j);
                     }
                     /* Solve the tridiagonal system */
@@ -1043,9 +1061,11 @@ void CrNi2Dexact (double *pos, complex double *psi, double (*Vx)(double, double)
  *  Vx(x,t) = potential energy for dimension x
  *  Vy(y,t) = potential energy for dimension y
  *  U(x,y,t) = interaction potential energy
+ *  flag = 0 if potential doesn't depend on time
+ *         1 if potential depends on time
  *  prm = pointer to struct with program parameters
  */
-void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), State *prm) {
+void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), State *prm, int flag) {
     /*Reading the struct*/
     double *x = prm->x;
     double *y = prm->y;
@@ -1095,6 +1115,15 @@ void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), 
     gamma = (complex double *)malloc(max*sizeof(complex double)); assert(gamma != NULL);
 
 
+    /* Initial potential (it may not vary over time) so we calculate it first */
+    for (i=0; i<xdim; i++) {
+        for (j=0; j<ydim; j++) {
+            VX(i,j) = 0.5*(*Vx)(x[i],0) + 0.25*(*U)(x[i],y[j],0);
+            VY(i,j) = (*Vy)(y[j],0) + 0.5*(*U)(x[i],y[j],0);
+        }
+    }
+
+
     /* Let the main loop begin!
      *
      * This loop solves the Schrödinger equation for the system using
@@ -1108,8 +1137,8 @@ void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), 
         for(k=0;k<2;k++) {
             current_psi = psivec[k];
 
-            alpha_x = I*dt*dtcoef[k]/(8.*dx*dx); /*We're applying only 1/2 of H_x in each x loop*/
-            alpha_y = I*dt*dtcoef[k]/(4.*dy*dy);
+            alpha_x = I*QUANT_h*dt*dtcoef[k]/(8*QUANT_m*dx*dx); /*We're applying only 1/2 of H_x in each x loop*/
+            alpha_y = I*QUANT_h*dt*dtcoef[k]/(4*QUANT_m*dy*dy);
             for (i=0; i<xdim; i++)
                 A_x[i] = -alpha_x;
             
@@ -1117,11 +1146,19 @@ void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), 
                 A_y[j] = -alpha_y;
 
 
-            
+            if(flag == 1){
+                for (i=0; i<xdim; i++) {
+                    for (j=0; j<ydim; j++) {
+                        VX(i,j) = 0.5*(*Vx)(x[i],*t) + 0.25*(*U)(x[i],y[j],*t);
+                        VY(i,j) = (*Vy)(y[j],*t) + 0.5*(*U)(x[i],y[j],*t);
+                    }
+                }
+            }
+
             for (i=0; i<xdim; i++) {
                 for (j=0; j<ydim; j++) {
-                    BETAX(i,j) = I*dt*x[i]*x[i]*0.125*dtcoef[k];
-                    BETAY(i,j) = I*dt*y[j]*y[j]*0.25*dtcoef[k];
+                    BETAX(i,j) = I*dt*dtcoef[k]*VX(i,j)/(2.*QUANT_h);
+                    BETAY(i,j) = I*dt*dtcoef[k]*VY(i,j)/(2.*QUANT_h);
                 }
             }
 
@@ -1134,9 +1171,12 @@ void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), 
                 r[0] = (1-2*alpha_x-BETAX(0,j))*psi_aux[0]+alpha_x*psi_aux[1];
                 r[xdim-1] = (1-2*alpha_x-BETAX(xdim-1,j))*psi_aux[xdim-1]+alpha_x*psi_aux[xdim-2];
                 
-                                
+                if(flag == 1)
+                    for(i=0;i<xdim;i++)
+                        VX(i,j) = 0.5*(*Vx)(x[i],*t+dt*0.5*dtcoef[k]) + 0.25*(*U)(x[i],y[j],*t+dt*0.5*dtcoef[k]);
+                
                 for(i=0;i<xdim;i++){
-                    BETAX(i,j) = I*dt*x[i]*x[i]*0.125*dtcoef[k];
+                    BETAX(i,j) = I*dt*dtcoef[k]*VX(i,j)/(2.*QUANT_h);
                     B[i] = 1+2*alpha_x+BETAX(i,j);
                 }
                 /* Solve the tridiagonal system */
@@ -1169,9 +1209,12 @@ void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), 
                 r[0] = (1-2*alpha_y-BETAY(i,0))*psi_aux[0]+alpha_y*psi_aux[1];
                 r[ydim-1] = (1-2*alpha_y-BETAY(i,ydim-1))*psi_aux[ydim-1]+alpha_y*psi_aux[ydim-2];
                 
-                                
+                if(flag == 1)
+                    for (j=0; j<ydim; j++)
+                        VY(i,j) = (*Vy)(y[j],*t+dt*dtcoef[k]) + 0.5*(*U)(x[i],y[j],*t+dt*dtcoef[k]);
+                
                 for (j=0; j<ydim; j++){
-                    BETAY(i,j) = I*dt*y[j]*y[j]*0.25*dtcoef[k];
+                    BETAY(i,j) = I*dt*dtcoef[k]*VY(i,j)/(2.*QUANT_h);
                     B[j] = 1+2*alpha_y+BETAY(i,j);
                 }
                 /* Solve the tridiagonal system */
@@ -1202,9 +1245,12 @@ void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), 
                 r[0] = (1-2*alpha_x-BETAX(0,j))*psi_aux[0]+alpha_x*psi_aux[1];
                 r[xdim-1] = (1-2*alpha_x-BETAX(xdim-1,j))*psi_aux[xdim-1]+alpha_x*psi_aux[xdim-2];
                 
-                                
+                if(flag == 1)
+                    for(i=0;i<xdim;i++)
+                        VX(i,j) = 0.5*(*Vx)(x[i],*t+dt*dtcoef[k]) + 0.25*(*U)(x[i],y[j],*t+dt*dtcoef[k]);
+                
                 for(i=0;i<xdim;i++){
-                    BETAX(i,j) = I*dt*x[i]*x[i]*0.125*dtcoef[k];
+                    BETAX(i,j) = I*dt*dtcoef[k]*VX(i,j)/(2.*QUANT_h);
                     B[i] = 1+2*alpha_x+BETAX(i,j);
                 }
                 /* Solve the tridiagonal system */

@@ -52,7 +52,7 @@ void wf_static01 (complex double *psia, complex double *psib, double t, State *p
  *         1 if potential depends on time
  *  prm = pointer to struct with program parameters
  */
-void CrNi2Dexact (double *pos, complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), State *prm);
+void CrNi2Dexact (double *pos, complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), void *prm, int flag);
 
 
 

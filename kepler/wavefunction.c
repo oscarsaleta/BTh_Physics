@@ -4,39 +4,44 @@
 #include <math.h>
 #include <complex.h>
 
+#ifndef M_PI
+#define M_PI           3.14159265358979323846
+#endif
+
 #include "numerical_lib.h"
 #include "quantum_lib.h"
 
-#define CENTRE_POU 1.5
-#define ALPHA 1
-#define IM_MAXIT 5000
+#define QUANT_h 1//1.05457173e-34
+#define QUANT_m 1//1.67262178e-27
+#define QUANT_w 1
+#define CENTRE_POU 0
 
 #define F(i,j) f[(fstruct.xdim*(j)+(i))]
-#define ABSPSISQ(i,j) abspsisq[(fstruct.xdim*(j)+(i))]
 
 double V(double x, double t);
+double Vx(double x, double t);
+double Vy(double x, double t);
 double U(double x, double y, double t);
 
 complex double stateZero2D(double x, double y, double x0, double y0);
-complex double stateZeroOne(double x, double y, double fase);
 complex double stateZero(double x, double x0);
 complex double stateOne(double x, double x0);
-complex double stateTwoZero(double x, double y);
+complex double stateTwo(double x, double x0);
 
 int main(int argc, char* argv[]){
 
     /* Program parameters */
     State fstruct;
     double xi=-8.,xf=8.,yi=-8.,yf=8.;
-    complex double *f;
+    complex double *f,*ft;
+    double x0=-3., y0=0.;
     double dt;
     double tmax;
-    double x0=-CENTRE_POU,y0=-0;
     double r[2];
     double fac; //factor de la fase
     /* Dummy variables */
     int i,j;
-    complex double *abspsisq; /*Dummy psi storage*/
+    int k;
 
     /* READING PARAMETERS */
     if (argc < 6
@@ -60,7 +65,7 @@ int main(int argc, char* argv[]){
     fstruct.x = (double *)malloc(fstruct.xdim*sizeof(double)); assert(fstruct.x != NULL);
     fstruct.y = (double *)malloc(fstruct.ydim*sizeof(double)); assert(fstruct.y != NULL);
     f = (complex double *)malloc(fstruct.xdim*fstruct.ydim*sizeof(complex double)); assert(f != NULL);
-    abspsisq = (complex double *)malloc(fstruct.xdim*fstruct.ydim*sizeof(complex double)); assert(abspsisq != NULL);
+    ft = (complex double *)malloc(fstruct.xdim*fstruct.ydim*sizeof(complex double)); assert(ft != NULL);
 
 
     /* Initiate state structure */
@@ -72,22 +77,20 @@ int main(int argc, char* argv[]){
     /* Initial State */ 
     for (i=0; i<fstruct.xdim; i++) {
         for (j=0; j<fstruct.ydim; j++) {
-            //F(i,j) = stateZero2D(fstruct.x[i],fstruct.y[j],x0,y0);
-            F(i,j) = stateZeroOne(fstruct.x[i],fstruct.y[j],fac);
-            //F(i,j) = stateTwoZero(fstruct.x[i],fstruct.y[j]);
+            /* |00> */
+            F(i,j) = stateZero2D(fstruct.x[i],fstruct.y[j],-CENTRE_POU,0);
         }
     }
-    print_qwave2D(stdout,f,&fstruct);
+    /* Imaginary time evolution */
+    CrNi2D_im_wf(f,V,V,U,&fstruct,100);
+
+
+
+    CrNi2D_wf(f,V,V,U,&fstruct,stdout);
     
-    //fprintf(stderr,"Calculating time evolution...\n");
-    //fprintf(stderr,"r=(%g,%g)\n",r[0],r[1]);
-    //CrNi2D_tr(r,f,V,V,U,&fstruct,0);
-    //CrNi2D_wf(f,V,V,U,&fstruct,stdout);
-    fprintf(stderr,"Done.\n");
-
-
+    //fprintf(stderr,"CALCULATING TRAJECTORY: phase=%g r=%g\n",fac,r[1]);
+    //CrNi2D_tr(r,f,Vx,V,U,&fstruct,0);
     //CrNi2Dexact(r,f,V,V,U,&fstruct,0);
-
 
     free(fstruct.x); free(fstruct.y); free(f);
 
@@ -95,31 +98,49 @@ int main(int argc, char* argv[]){
 }
 
 double V(double x, double t){
-    return 0.5*x*x;
+    if (x<-1e-5 || x>1e-5)
+        return 1/(0.5*x);
+    return 1e5;
 }
 
+double Vx (double x, double t){
+    if (x<0)
+        return 0.5*QUANT_m*QUANT_w*QUANT_w*(x+CENTRE_POU)*(x+CENTRE_POU);
+    return 0.5*QUANT_m*QUANT_w*QUANT_w*(x-CENTRE_POU)*(x-CENTRE_POU);
+}
+
+double Vy (double x, double t){
+    return 0.5*QUANT_m*QUANT_w*QUANT_w*x*x;
+}
 double U (double x, double y, double t){
     return 0;
 }
 
 complex double stateZero2D(double x, double y, double x0, double y0) {
-    return 1./sqrt(M_PI)*exp(-0.5*((x-x0)*(x-x0)+(y-y0)*(y-y0)));
-}
-
-complex double stateZeroOne(double x, double y, double fase) {
-    return 1./sqrt(2.)*(stateZero(x,0)*stateOne(y,0)+cexp(I*2*M_PI*fase)*stateZero(y,0)*stateOne(x,0));
+    return stateZero(x,x0)*stateZero(y,y0);
+    complex double fx, fy;
+    fx = exp(-QUANT_m*QUANT_w*((x-x0)*(x-x0))/(2.*QUANT_h));//*cexp(I*px0*x/QUANT_h);
+    fy = exp(-QUANT_m*QUANT_w*((y-y0)*(y-y0))/(2.*QUANT_h));//*cexp(I*py0*y/QUANT_h);
+    return sqrt(QUANT_m*QUANT_w/(M_PI*QUANT_h))*fx*fy;
 }
 
 complex double stateZero(double x, double x0) {
-    return 1./sqrt(sqrt(M_PI))*exp(-0.5*((x-x0)*(x-x0)));
+    complex double fx;
+    double alpha = QUANT_m*QUANT_w/QUANT_h;
+    fx = exp(-alpha*(x-x0)*(x-x0)/2);
+    return sqrt(sqrt(alpha/M_PI))*fx;
 }
 
 complex double stateOne(double x, double x0) {
-    return sqrt(2./sqrt(M_PI))*(x-x0)*exp(-0.5*(x-x0)*(x-x0));
+    double alpha = QUANT_w*QUANT_m/QUANT_h;
+    double y = sqrt(alpha)*(x-x0);
+    complex double fx = sqrt(2.)*y*exp(-(y*y)/2.);
+    return sqrt(sqrt(alpha/M_PI))*fx;
 }
 
-complex double stateTwoZero(double x, double y) {
-    return 1/sqrt(2*M_PI)*(x+I*y)*(x+I*y)*exp(-0.5*(x*x+y*y));
+complex double stateTwo(double x, double x0) {
+    double alpha = sqrt(QUANT_w*QUANT_m/QUANT_h);
+    return sqrt(alpha/(sqrt(M_PI)*8))*(4*alpha*alpha*x*x-2)*exp(-0.5*alpha*alpha*x*x);
 }
 
 #undef F

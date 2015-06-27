@@ -73,11 +73,11 @@ double interpol(double* x, double* fx, int N, int j, double x0, double delta){
  *  x0, y0 = point where f has to be evaluated
  *  prm = structure containing state parameters
  * */
-double interpol2D (double *f,  int i, int j, double x0, double y0, void *prm) {
-    double *x = (*((struct state_struct*)prm)).x;
-    double *y = (*((struct state_struct*)prm)).y;
-    double dx = (*((struct state_struct*)prm)).dx; 
-    double dy = (*((struct state_struct*)prm)).dy;
+double interpol2D (double *f, int i, int j, double x0, double y0, State *prm) {
+    double *x = prm->x;
+    double *y = prm->y;
+    double dx = prm->dx; 
+    double dy = prm->dy;
 
     return 1./(dx*dy)*(f[0]*(x[i+1]-x0)*(y[j+1]-y0)+f[1]*(x0-x[i])*(y[j+1]-y0)
             +f[2]*(x[i+1]-x0)*(y0-y[j])+f[3]*(x0-x[i])*(y0-y[j]));

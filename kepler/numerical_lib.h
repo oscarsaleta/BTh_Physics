@@ -1,7 +1,3 @@
-#ifndef M_PI
-#define M_PI           3.14159265358979323846
-#endif
-
 /* Structure for storing the state of the system */
 typedef struct state_struct {
     int xdim, ydim;
@@ -51,7 +47,7 @@ double interpol(double* x, double* fx, int N, int j, double x0, double delta);
  *  x0, y0 = point where f has to be evaluated
  *  prm = structure containing state parameters
  * */
-double interpol2D (double *f,  int i, int j, double x0, double y0, void *prm);
+double interpol2D (double *f,  int i, int j, double x0, double y0, State *prm);
 
 
 /* SIMPSON METHOD FOR 2d INTEGRATION */

@@ -2,8 +2,8 @@
 # Opcions d'optimització
 # ======================
 COMPILER=gcc
-#OPT=-g -Wall -std=c99
-OPT=-O3 -Wall -std=c99 
+OPT=-g -Wall -std=c99
+#OPT=-O3 -Wall -pedantic -std=c99 
 
 # =========
 # Utilitats
