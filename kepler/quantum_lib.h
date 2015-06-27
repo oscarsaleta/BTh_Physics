@@ -23,7 +23,7 @@ void abs_mask(int N, double perc, int nu, double *mask);
 void bohm_vel2D(double *v, complex double *psi,  double *position, void *prm);
 
 
-void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), State *prm, int maxit);
+void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double, double), double (*Vy)(double, double, double), double (*U)(double, double, double), State *prm, int maxit);
 
 /* Wavefunction time evolution (Crank-Nicolson exact)*/
 /* Variables:
@@ -36,7 +36,7 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
  *         1 if potential depends on time
  *  output = file to write data (can be stdout)
  */
-void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), State *prm, FILE *output);
+void CrNi2D_wf (complex double *psi, double (*Vx)(double, double, double), double (*Vy)(double, double, double), double (*U)(double, double, double), State *prm, FILE *output);
 
 
 void wf_static01 (complex double *psia, complex double *psib, double t, State *prm);

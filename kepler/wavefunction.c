@@ -19,9 +19,10 @@
 #define F(i,j) f[(fstruct.xdim*(j)+(i))]
 
 double V(double x, double t);
-double Vx(double x, double t);
-double Vy(double x, double t);
+double Vx(double x, double y, double t);
+double Vy(double x, double y, double t);
 double U(double x, double y, double t);
+int isCenter(double x, double y, double epsilon);
 
 complex double stateZero2D(double x, double y, double x0, double y0);
 complex double stateZero(double x, double x0);
@@ -97,23 +98,14 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
-double V(double x, double t){
-    if (x<-1e-5 || x>1e-5)
-        return 1/(0.5*x);
-    return 1e5;
-}
-
-double Vx (double x, double t){
-    if (x<0)
-        return 0.5*QUANT_m*QUANT_w*QUANT_w*(x+CENTRE_POU)*(x+CENTRE_POU);
-    return 0.5*QUANT_m*QUANT_w*QUANT_w*(x-CENTRE_POU)*(x-CENTRE_POU);
-}
-
-double Vy (double x, double t){
-    return 0.5*QUANT_m*QUANT_w*QUANT_w*x*x;
-}
-double U (double x, double y, double t){
+double V (double x, double t) {
     return 0;
+}
+
+double U (double x, double y, double t){
+    if (isCenter(x,y,1e-5))
+        return 1e5;
+    return 1/(0.5*(x+y));
 }
 
 complex double stateZero2D(double x, double y, double x0, double y0) {
@@ -142,6 +134,13 @@ complex double stateTwo(double x, double x0) {
     double alpha = sqrt(QUANT_w*QUANT_m/QUANT_h);
     return sqrt(alpha/(sqrt(M_PI)*8))*(4*alpha*alpha*x*x-2)*exp(-0.5*alpha*alpha*x*x);
 }
+
+int isCenter(double x, double y, double epsilon) {
+    if ( (x<epsilon && x>-epsilon) && (y<epsilon && y>-epsilon) )
+        return 1;
+    return 0;
+}
+            
 
 #undef F
 

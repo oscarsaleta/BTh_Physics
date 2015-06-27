@@ -327,8 +327,8 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
     /* Initial potential (it may not vary over time) so we calculate it first */
     for (i=0; i<xdim; i++) {
         for (j=0; j<ydim; j++) {
-            VX(i,j) = 0.5*(*Vx)(x[i],0) + 0.25*(*U)(x[i],y[j],0);
-            VY(i,j) = (*Vy)(y[j],0) + 0.5*(*U)(x[i],y[j],0);
+            VX(i,j) = 0.5*(*Vx)(x[i],y[j],0) + 0.25*(*U)(x[i],y[j],0);
+            VY(i,j) = (*Vy)(x[i],y[j],0) + 0.5*(*U)(x[i],y[j],0);
         }
     }
 
@@ -506,7 +506,7 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
 #define VY(i,j) Varray_y[(xdim*(j)+(i))]
 #define BETAX(i,j) beta_x[(xdim*(j)+(i))]
 #define BETAY(i,j) beta_y[(xdim*(j)+(i))]
-void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), State *prm, int maxit) {
+void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double, double), double (*Vy)(double, double, double), double (*U)(double, double, double), State *prm, int maxit) {
     /*Reading the struct*/
     double *x = prm->x;
     double *y = prm->y;
@@ -543,8 +543,8 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
     /* Initial potential (it may not vary over time) so we calculate it first */
     for (i=0; i<xdim; i++) {
         for (j=0; j<ydim; j++) {
-            VX(i,j) = 0.5*(*Vx)(x[i],0) + 0.25*(*U)(x[i],y[j],0);
-            VY(i,j) = (*Vy)(y[j],0) + 0.5*(*U)(x[i],y[j],0);
+            VX(i,j) = 0.5*(*Vx)(x[i],y[j],0) + 0.25*(*U)(x[i],y[j],0);
+            VY(i,j) = (*Vy)(x[i],y[j],0) + 0.5*(*U)(x[i],y[j],0);
         }
     }
 
