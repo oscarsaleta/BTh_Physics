@@ -15,7 +15,7 @@
 #define QUANT_m 1//1.67262178e-27
 #define QUANT_w 1
 #define CENTRE_POU 0
-#define IM_MAXIT 900
+#define IM_MAXIT 1200
 #define GRID_DIM 151
 
 #define F(i,j) f[(fstruct.xdim*(j)+(i))]
@@ -78,13 +78,14 @@ int main(int argc, char* argv[]){
     for (i=0; i<fstruct.xdim; i++) {
         for (j=0; j<fstruct.ydim; j++) {
             /* |00> */
-            F(i,j) = stateZero2D(fstruct.x[i],fstruct.y[j],-CENTRE_POU,0);
+            //F(i,j) = stateZero2D(fstruct.x[i],fstruct.y[j],-CENTRE_POU,0);
             F(i,j) = donut(fstruct.x[i],fstruct.y[j]);
         }
     }
     /* Imaginary time evolution */
     fprintf(stderr,"CALCULATING INITIAL WAVE FUNCTION...");
     CrNi2D_im_wf(f,V,V,U,&fstruct,IM_MAXIT);
+    //print_qwave2D(stdout,f,&fstruct);
     fprintf(stderr," Done\n");
 
     //CrNi2D_wf(f,V,V,U,&fstruct,stdout);
@@ -106,7 +107,7 @@ double V (double x, double t) {
 double U (double x, double y, double t){
     if (isCenter(x,y,1e-5))
         return -1e5;
-    return -1/(0.5*(fabs(x)+fabs(y)));
+    return -1/(0.5*sqrt(x*x+y*y));
 }
 
 complex double stateZero2D(double x, double y, double x0, double y0) {
