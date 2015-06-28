@@ -85,7 +85,7 @@ int main(int argc, char* argv[]){
         }
     }
     /* Imaginary time evolution */
-    CrNi2D_im_wf(f,V,V,U,&fstruct,500);
+    CrNi2D_im_wf(f,V,V,U,&fstruct,700);
     //print_qwave2D(stdout,f,&fstruct);
 
     //CrNi2D_wf(f,V,V,U,&fstruct,stdout);
