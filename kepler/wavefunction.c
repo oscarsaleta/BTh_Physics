@@ -15,6 +15,8 @@
 #define QUANT_m 1//1.67262178e-27
 #define QUANT_w 1
 #define CENTRE_POU 0
+#define IM_MAXIT 900
+#define GRID_DIM 151
 
 #define F(i,j) f[(fstruct.xdim*(j)+(i))]
 
@@ -36,30 +38,26 @@ int main(int argc, char* argv[]){
     State fstruct;
     double xi=-8.,xf=8.,yi=-8.,yf=8.;
     complex double *f,*ft;
-    double x0=-3., y0=0.;
     double dt;
     double tmax;
     double r[2];
-    double fac; //factor de la fase
     /* Dummy variables */
     int i,j;
-    int k;
 
     /* READING PARAMETERS */
-    if (argc < 6
+    if (argc < 5
             || sscanf(argv[1],"%lf",&dt)!=1
             || sscanf(argv[2],"%lf",&tmax)!=1
-            || sscanf(argv[3],"%lf",&fac)!=1
-            || sscanf(argv[4],"%lf",&r[0])!=1
-            || sscanf(argv[5],"%lf",&r[1])!=1
+            || sscanf(argv[3],"%lf",&r[0])!=1
+            || sscanf(argv[4],"%lf",&r[1])!=1
             ) {
-        fprintf(stderr,"%s: dt tmax fase x0 y0\n",argv[0]);
+        fprintf(stderr,"%s: dt tmax x0 y0\n",argv[0]);
         return 1;
     }
 
     /* INITIALIZE STRUCTURE AND STATE*/
 
-    fstruct.xdim = fstruct.ydim = 151;
+    fstruct.xdim = fstruct.ydim = GRID_DIM;
 
     /* Allocation of arrays and pointers*/
     fstruct.t = (double *)malloc(sizeof(double));
@@ -85,13 +83,16 @@ int main(int argc, char* argv[]){
         }
     }
     /* Imaginary time evolution */
-    CrNi2D_im_wf(f,V,V,U,&fstruct,700);
-    //print_qwave2D(stdout,f,&fstruct);
+    fprintf(stderr,"CALCULATING INITIAL WAVE FUNCTION...");
+    CrNi2D_im_wf(f,V,V,U,&fstruct,IM_MAXIT);
+    fprintf(stderr," Done\n");
 
     //CrNi2D_wf(f,V,V,U,&fstruct,stdout);
     
-    fprintf(stderr,"CALCULATING TRAJECTORY: phase=%g r=%g\n",fac,r[1]);
+    fprintf(stderr,"CALCULATING TRAJECTORY: r=(%g,%g)...",r[0],r[1]);
     CrNi2D_tr(r,f,V,V,U,&fstruct,0);
+    fprintf(stderr," Done\n");
+
 
     free(fstruct.x); free(fstruct.y); free(f);
 
