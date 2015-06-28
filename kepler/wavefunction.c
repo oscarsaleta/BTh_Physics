@@ -28,6 +28,7 @@ complex double stateZero2D(double x, double y, double x0, double y0);
 complex double stateZero(double x, double x0);
 complex double stateOne(double x, double x0);
 complex double stateTwo(double x, double x0);
+complex double donut(double x, double y);
 
 int main(int argc, char* argv[]){
 
@@ -80,18 +81,17 @@ int main(int argc, char* argv[]){
         for (j=0; j<fstruct.ydim; j++) {
             /* |00> */
             F(i,j) = stateZero2D(fstruct.x[i],fstruct.y[j],-CENTRE_POU,0);
+            F(i,j) = donut(fstruct.x[i],fstruct.y[j]);
         }
     }
     /* Imaginary time evolution */
-    CrNi2D_im_wf(f,V,V,U,&fstruct,100);
+    CrNi2D_im_wf(f,V,V,U,&fstruct,500);
+    //print_qwave2D(stdout,f,&fstruct);
 
-
-
-    CrNi2D_wf(f,V,V,U,&fstruct,stdout);
+    //CrNi2D_wf(f,V,V,U,&fstruct,stdout);
     
-    //fprintf(stderr,"CALCULATING TRAJECTORY: phase=%g r=%g\n",fac,r[1]);
-    //CrNi2D_tr(r,f,Vx,V,U,&fstruct,0);
-    //CrNi2Dexact(r,f,V,V,U,&fstruct,0);
+    fprintf(stderr,"CALCULATING TRAJECTORY: phase=%g r=%g\n",fac,r[1]);
+    CrNi2D_tr(r,f,V,V,U,&fstruct,0);
 
     free(fstruct.x); free(fstruct.y); free(f);
 
@@ -104,8 +104,8 @@ double V (double x, double t) {
 
 double U (double x, double y, double t){
     if (isCenter(x,y,1e-5))
-        return 1e5;
-    return 1/(0.5*(x+y));
+        return -1e5;
+    return -1/(0.5*(fabs(x)+fabs(y)));
 }
 
 complex double stateZero2D(double x, double y, double x0, double y0) {
@@ -130,15 +130,17 @@ complex double stateOne(double x, double x0) {
     return sqrt(sqrt(alpha/M_PI))*fx;
 }
 
+complex double donut (double x, double y) {
+    return 1/sqrt(2.)*( stateZero(x,0)*stateOne(y,0)+I*stateOne(x,0)*stateZero(y,0) );
+}
+
 complex double stateTwo(double x, double x0) {
     double alpha = sqrt(QUANT_w*QUANT_m/QUANT_h);
     return sqrt(alpha/(sqrt(M_PI)*8))*(4*alpha*alpha*x*x-2)*exp(-0.5*alpha*alpha*x*x);
 }
 
 int isCenter(double x, double y, double epsilon) {
-    if ( (x<epsilon && x>-epsilon) && (y<epsilon && y>-epsilon) )
-        return 1;
-    return 0;
+    return (x*x+y*y < epsilon) ? 1 : 0;
 }
             
 
