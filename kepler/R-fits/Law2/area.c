@@ -26,7 +26,7 @@ int main (int argc, char *argv[]) {
     }
 
     fprintf(stdout,"#x y t dA/dt\n");
-    
+
     fscanf(fitxer,"%lf %lf %lf %lf",&x[0],&y[0],&t[0],&foo);
     theta[0] = atan(y[0]/x[0]);
     while (!feof(fitxer)) {
