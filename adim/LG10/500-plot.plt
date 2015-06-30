@@ -6,8 +6,8 @@ set view map
 set size ratio -1
 set key textcolor rgb "white"
 unset key
-set xrange [-3.1:3.1]
-set yrange [-3.1:3.1]
+set xrange [-2.24:2.24]
+set yrange [-2.24:2.24]
 #set palette grey negative
 #set palette defined (0 "white", 0.15 "orange", 0.3 "red")
 splot "500-wf.dat" u 1:2:3 w pm3d,\
@@ -29,5 +29,4 @@ splot "500-wf.dat" u 1:2:3 w pm3d,\
       "500-18.dat" u 1:2:(0.0) w l title "(0.0,0.18)",\
       "500-19.dat" u 1:2:(0.0) w l title "(0.0,0.19)"
 
-system("epstopdf plot-500.eps")
-
+system("epstopdf plot-500.eps && rm *.eps")
