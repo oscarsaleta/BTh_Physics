@@ -16,7 +16,7 @@
 #define QUANT_w 1
 #define CENTRE_POU 0
 #define IM_MAXIT 1200
-#define GRID_DIM 151
+#define GRID_DIM 251
 
 #define F1(i,j) f1[(fstruct.xdim*(j)+(i))]
 #define F2(i,j) f2[(fstruct.xdim*(j)+(i))]
