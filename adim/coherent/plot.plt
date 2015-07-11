@@ -15,7 +15,7 @@ set size ratio -1
 
 set object 1 circle at first 0,0 size first 1.5 front lc rgb "green" 
 
-set multiplot layout 2,2 title "Coherent state for a harmonic quantum oscillator"\
+set multiplot layout 2,2 \
         margins 0.1,0.9,0.1,0.9 \
         spacing 0.01,0.07
 
