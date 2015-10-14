@@ -5,6 +5,8 @@ COMPILER=gcc
 OPT=-g -Wall -std=c99
 #OPT=-O3 -Wall -pedantic -std=c99 
 
+all : wavefunction trajectory
+
 # =========
 # Utilitats
 # =========

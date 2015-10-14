@@ -34,9 +34,11 @@ int main (int argc, char *argv[]) {
     fprintf(stdout,"#x y t dA/dt K\n");
 
     //Càlculs
+    fprintf(stderr,"Calculant angles inicials respecte el focus...\n");
     fscanf(fitxer,"%lf %lf %lf %lf",&x[0],&y[0],&t[0],&r[0]);
     theta[0] = atan2(y[0],x[0]); //angle resp (0,0)
     theta_f[0] = atan2(y[0]-focus[1],x[0]-focus[0]); //angle resp focus
+    fprintf(stderr,"Processant fitxer...");
     while (!feof(fitxer)) {
         fscanf(fitxer,"%lf %lf %lf %lf",&x[1],&y[1],&t[1],&r[1]);
         r_f = sqrt( (x[0]-focus[0])*(x[0]-focus[0])+(y[0]-focus[1])*(y[0]-focus[1]) );
@@ -54,6 +56,7 @@ int main (int argc, char *argv[]) {
         theta[0]=theta[1];
         theta_f[0]=theta_f[1];
     }
+    fprintf(stderr," Done\n");
 
     fclose(fitxer);
     return 0;

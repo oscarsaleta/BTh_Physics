@@ -57,7 +57,7 @@ int main(int argc, char* argv[]){
             || sscanf(argv[5],"%lf",&r[0])!=1
             || sscanf(argv[6],"%lf",&r[1])!=1
             ) {
-        fprintf(stderr,"%s: dt tmax x0 y0\n",argv[0]);
+        fprintf(stderr,"%s: dt tmax a b x0 y0\n",argv[0]);
         return 1;
     }
 
@@ -104,11 +104,10 @@ int main(int argc, char* argv[]){
     //print_qwave2D(stdout,ft,&fstruct);
     fprintf(stderr," Done\n");
 
-    fprintf(stderr,"CALCULATING WAVE FUNCTION EVOLUTION...:");
-    CrNi2D_wf(ft,V,V,U,&fstruct,stdout);
+    //CrNi2D_wf(f,V,V,U,&fstruct,stdout);
     
-    //fprintf(stderr,"CALCULATING TRAJECTORY: r=(%g,%g)...",r[0],r[1]);
-    //CrNi2D_tr(r,ft,V,V,U,&fstruct,0);
+    fprintf(stderr,"CALCULATING TRAJECTORY: r=(%g,%g)...",r[0],r[1]);
+    CrNi2D_tr(r,ft,V,V,U,&fstruct,0);
     fprintf(stderr," Done\n");
 
 
@@ -171,3 +170,4 @@ int isCenter(double x, double y, double epsilon) {
 #undef QUANT_h
 #undef QUANT_m
 #undef QUANT_w
+
