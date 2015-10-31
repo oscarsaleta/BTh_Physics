@@ -57,7 +57,7 @@ int main(int argc, char* argv[]){
             || sscanf(argv[5],"%lf",&r[0])!=1
             || sscanf(argv[6],"%lf",&r[1])!=1
             ) {
-        fprintf(stderr,"%s: dt tmax x0 y0\n",argv[0]);
+        fprintf(stderr,"%s: dt tmax a b x0 y0\n",argv[0]);
         return 1;
     }
 
@@ -81,13 +81,19 @@ int main(int argc, char* argv[]){
     fstruct.t_max = tmax;
     vec_create(xi,xf,yi,yf,&fstruct);
 
-    /* Initial State */ 
-    for (i=0; i<fstruct.xdim; i++) {
-        for (j=0; j<fstruct.ydim; j++) {
-            /* |00> */
-            //F(i,j) = stateZero2D(fstruct.x[i],fstruct.y[j],-CENTRE_POU,0);
-            F1(i,j) = donut1(fstruct.x[i],fstruct.y[j]);
-            F2(i,j) = donut2(fstruct.x[i],fstruct.y[j]);
+    /* Initial State */
+    {
+        for (i=0; i<fstruct.xdim; i++) {
+        #pragma omp parallel num_threads(4)
+        {
+            #pragma omp for
+            for (j=0; j<fstruct.ydim; j++) {
+                /* |00> */
+                //F(i,j) = stateZero2D(fstruct.x[i],fstruct.y[j],-CENTRE_POU,0);
+                F1(i,j) = donut1(fstruct.x[i],fstruct.y[j]);
+                F2(i,j) = donut2(fstruct.x[i],fstruct.y[j]);
+            }
+        }
         }
     }
     /* Imaginary time evolution */

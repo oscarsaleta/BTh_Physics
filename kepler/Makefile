@@ -11,17 +11,17 @@ all : wavefunction trajectory
 # Utilitats
 # =========
 wavefunction : wavefunction.o numerical_lib.o quantum_lib.o
-	$(COMPILER) -o wavefunction $(OPT) wavefunction.o numerical_lib.o quantum_lib.o -lm
+	$(COMPILER) -o wavefunction $(OPT) wavefunction.o numerical_lib.o quantum_lib.o -lm -fopenmp
 trajectory : trajectory.o numerical_lib.o quantum_lib.o
-	$(COMPILER) -o trajectory $(OPT) trajectory.o numerical_lib.o quantum_lib.o -lm
+	$(COMPILER) -o trajectory $(OPT) trajectory.o numerical_lib.o quantum_lib.o -lm -fopenmp
 
 # ===========
 # Bibliotecas
 # ===========
 wavefunction.o : wavefunction.c
-	$(COMPILER) -c $(OPT) wavefunction.c -lm
+	$(COMPILER) -c $(OPT) wavefunction.c -lm -fopenmp
 trajectory.o : trajectory.c
-	$(COMPILER) -c $(OPT) trajectory.c -lm
+	$(COMPILER) -c $(OPT) trajectory.c -lm -fopenmp
 numerical_lib.o : numerical_lib.c
 	$(COMPILER) -c $(OPT) numerical_lib.c -lm
 quantum_lib.o : quantum_lib.c

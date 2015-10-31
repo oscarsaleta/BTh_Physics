@@ -541,10 +541,14 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
 
 
     /* Initial potential (it may not vary over time) so we calculate it first */
-    for (i=0; i<xdim; i++) {
-        for (j=0; j<ydim; j++) {
-            VX(i,j) = 0.5*(*Vx)(x[i],0) + 0.25*(*U)(x[i],y[j],0);
-            VY(i,j) = (*Vy)(y[j],0) + 0.5*(*U)(x[i],y[j],0);
+    #pragma omp parallel num_threads(4)
+    {
+        #pragma omp for
+        for (i=0; i<xdim; i++) {
+            for (j=0; j<ydim; j++) {
+                VX(i,j) = 0.5*(*Vx)(x[i],0) + 0.25*(*U)(x[i],y[j],0);
+                VY(i,j) = (*Vy)(y[j],0) + 0.5*(*U)(x[i],y[j],0);
+            }
         }
     }
 
@@ -563,38 +567,47 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
 
         alpha_x = QUANT_h*dt/(8*QUANT_m*dx*dx); /*We're applying only 1/2 of H_x in each x loop*/
         alpha_y = QUANT_h*dt/(4*QUANT_m*dy*dy);
-        for (i=0; i<xdim; i++)
-            A_x[i] = -alpha_x;
-        
-        for (j=0; j<ydim; j++)
-            A_y[j] = -alpha_y;
+        #pragma omp parallel num_threads(4)
+        {
+            #pragma omp for nowait
+            for (i=0; i<xdim; i++)
+                A_x[i] = -alpha_x;
+            #pragma omp for nowait
+            for (j=0; j<ydim; j++)
+                A_y[j] = -alpha_y;
 
-
-        for (i=0; i<xdim; i++) {
-            for (j=0; j<ydim; j++) {
-                BETAX(i,j) = dt*VX(i,j)/(2.*QUANT_h);
-                BETAY(i,j) = dt*VY(i,j)/(2.*QUANT_h);
+            #pragma omp for
+            for (i=0; i<xdim; i++) {
+                for (j=0; j<ydim; j++) {
+                    BETAX(i,j) = dt*VX(i,j)/(2.*QUANT_h);
+                    BETAY(i,j) = dt*VY(i,j)/(2.*QUANT_h);
+                }
             }
         }
 
         /* Evolve 1/2 H_x */
         for (j=0; j<ydim; j++) {
-            for (i=0; i<xdim; i++) 
-                psi_aux[i] = PSI(i,j);
-            for (i=1; i<xdim-1; i++)
-                r[i] = (1-2*alpha_x-BETAX(i,j))*psi_aux[i]+alpha_x*(psi_aux[i-1]+psi_aux[i+1]);
-            r[0] = (1-2*alpha_x-BETAX(0,j))*psi_aux[0]+alpha_x*psi_aux[1];
-            r[xdim-1] = (1-2*alpha_x-BETAX(xdim-1,j))*psi_aux[xdim-1]+alpha_x*psi_aux[xdim-2];
-            
-            for(i=0;i<xdim;i++){
-                BETAX(i,j) = dt*VX(i,j)/(2.*QUANT_h);
-                B[i] = 1+2*alpha_x+BETAX(i,j);
+            #pragma omp parallel num_threads(4)
+            {
+                #pragma omp for
+                for (i=0; i<xdim; i++) 
+                    psi_aux[i] = PSI(i,j);
+                #pragma omp for
+                for (i=1; i<xdim-1; i++)
+                    r[i] = (1-2*alpha_x-BETAX(i,j))*psi_aux[i]+alpha_x*(psi_aux[i-1]+psi_aux[i+1]);
+                r[0] = (1-2*alpha_x-BETAX(0,j))*psi_aux[0]+alpha_x*psi_aux[1];
+                r[xdim-1] = (1-2*alpha_x-BETAX(xdim-1,j))*psi_aux[xdim-1]+alpha_x*psi_aux[xdim-2];
+                
+                for(i=0;i<xdim;i++){
+                    BETAX(i,j) = dt*VX(i,j)/(2.*QUANT_h);
+                    B[i] = 1+2*alpha_x+BETAX(i,j);
+                }
+                /* Solve the tridiagonal system */
+                tridag(A_x,B,A_x,r,psi_aux,gamma,xdim);
+                /* Reassign partially evolved psi */
+                for (i=0; i<xdim; i++)
+                    PSI(i,j) = psi_aux[i];
             }
-            /* Solve the tridiagonal system */
-            tridag(A_x,B,A_x,r,psi_aux,gamma,xdim);
-            /* Reassign partially evolved psi */
-            for (i=0; i<xdim; i++)
-                PSI(i,j) = psi_aux[i];
         }
 
 

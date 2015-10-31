@@ -81,13 +81,15 @@ int main(int argc, char* argv[]){
     fstruct.t_max = tmax;
     vec_create(xi,xf,yi,yf,&fstruct);
 
-    /* Initial State */ 
-    for (i=0; i<fstruct.xdim; i++) {
-        for (j=0; j<fstruct.ydim; j++) {
-            /* |00> */
-            //F(i,j) = stateZero2D(fstruct.x[i],fstruct.y[j],-CENTRE_POU,0);
-            F1(i,j) = donut1(fstruct.x[i],fstruct.y[j]);
-            F2(i,j) = donut2(fstruct.x[i],fstruct.y[j]);
+    /* Initial State */
+    #pragma omp parallel num_threads(4)
+    {
+        #pragma omp for
+        for (i=0; i<fstruct.xdim; i++) {
+            for (j=0; j<fstruct.ydim; j++) {
+                F1(i,j) = donut1(fstruct.x[i],fstruct.y[j]);
+                F2(i,j) = donut2(fstruct.x[i],fstruct.y[j]);
+            }
         }
     }
     /* Imaginary time evolution */
@@ -123,7 +125,7 @@ double V (double x, double t) {
 double U (double x, double y, double t){
     if (isCenter(x,y,1e-5))
         return -1e5;
-    return -1/(0.5*sqrt(x*x+y*y));
+    return -1/sqrt(x*x+y*y); //TODO k=1
 }
 
 complex double stateZero2D(double x, double y, double x0, double y0) {
