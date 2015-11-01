@@ -82,14 +82,10 @@ int main(int argc, char* argv[]){
     vec_create(xi,xf,yi,yf,&fstruct);
 
     /* Initial State */
-    #pragma omp parallel num_threads(4)
-    {
-        #pragma omp for
-        for (i=0; i<fstruct.xdim; i++) {
-            for (j=0; j<fstruct.ydim; j++) {
-                F1(i,j) = donut1(fstruct.x[i],fstruct.y[j]);
-                F2(i,j) = donut2(fstruct.x[i],fstruct.y[j]);
-            }
+    for (i=0; i<fstruct.xdim; i++) {
+        for (j=0; j<fstruct.ydim; j++) {
+            F1(i,j) = donut1(fstruct.x[i],fstruct.y[j]);
+            F2(i,j) = donut2(fstruct.x[i],fstruct.y[j]);
         }
     }
     /* Imaginary time evolution */
