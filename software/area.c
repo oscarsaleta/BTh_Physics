@@ -13,9 +13,10 @@ int main (int argc, char *argv[]) {
     FILE *fitxer;
 
     //Lectura paràmetres
+    // Hem de llegir el fitxer on estan guardats els punts de dades
     if (argc < 2
             || sscanf(argv[1],"%s",nomFitxer)!=1) {
-        fprintf(stderr,"%s: fitxer\n", argv[0]);
+        fprintf(stderr,"%s: fitxer < focus > output\n", argv[0]);
         return 1;
     }
 
@@ -48,8 +49,8 @@ int main (int argc, char *argv[]) {
         theta_f[1] = atan2(y[1]-focus[1],x[1]-focus[0]); //angle resp focus
         dtheta_f = (theta_f[1]-theta_f[0])/(t[1]-t[0]);
         darea = 0.5*r_f*r_f*dtheta_f;
-        energy = 0.5*r[0]*r[0]*dtheta*dtheta-1./r[0];
-        fprintf(stdout,"%10.6G %10.6G %10.6G %10.6G %10.6G\n",x[1],y[1],t[1],fabs(darea),energy);
+        energy = 0.5*r[0]*r[0]*dtheta*dtheta-2./r[0];
+        fprintf(stdout,"%10.6G %10.6G %10.6G %10.6G %10.6G %10.6G\n",x[1],y[1],t[1],fabs(darea),energy,r[0]*dtheta);
         x[0]=x[1];
         y[0]=y[1];
         t[0]=t[1];

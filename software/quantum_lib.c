@@ -574,7 +574,6 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
                 BETAY(i,j) = dt*VY(i,j)/(2.*QUANT_h);
             }
         }
-
         /* Evolve 1/2 H_x */
         for (j=0; j<ydim; j++) {
             for (i=0; i<xdim; i++) 
