@@ -1,0 +1,11 @@
+# $ gnuplot -e "name=filename_no_extension; k=index" plotWF.plt
+set encoding utf8
+set terminal pngcairo
+
+set view map
+set pm3d
+unset surface
+set cbrange [0:0.1]
+
+set output name.k.".png";
+splot name.'.dat' using 1:2:3 index k

@@ -197,7 +197,7 @@ void vec_create (double x0, double xf, double y0, double yf, State *prm){
     
     for(i=0; i<xdim ; i++)
             prm->x[i] = x0+i*prm->dx;
-    
+
     for(i=0; i<ydim ; i++)
             prm->y[i] = y0+i*prm->dy;
 } 
