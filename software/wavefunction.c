@@ -22,21 +22,18 @@ int main(int argc, char* argv[]){
     complex double *f1,*f2,*ft;
     double dt;
     double tmax;
-    double r[2];
     double a,b;
     /* Dummy variables */
     int i,j;
 
     /* READING PARAMETERS */
-    if (argc < 7
+    if (argc < 5
             || sscanf(argv[1],"%lf",&dt)!=1
             || sscanf(argv[2],"%lf",&tmax)!=1
             || sscanf(argv[3],"%lf",&a)!=1
             || sscanf(argv[4],"%lf",&b)!=1
-            || sscanf(argv[5],"%lf",&r[0])!=1
-            || sscanf(argv[6],"%lf",&r[1])!=1
             ) {
-        fprintf(stderr,"%s: dt tmax a b x0 y0\n",argv[0]);
+        fprintf(stderr,"%s: dt tmax a b\n",argv[0]);
         return 1;
     }
 
