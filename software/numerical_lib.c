@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "numerical_lib.h"
 
+
 /* TRIDIAGONAL MATRIX METHOD */
 /* Given a system with diagonal b, upper diagonal c,
  * and lower diagonal a, with independet term r, it
@@ -21,7 +22,7 @@ void tridag(complex double *a, complex double *b, complex double *c, complex dou
 
     if (b[0] == 0.0){
         fprintf(stderr,"Error fatal!\n");
-        system("kill -2");
+        return;
     }
 
     u[0] = r[0]/(bet=b[0]);
@@ -30,7 +31,7 @@ void tridag(complex double *a, complex double *b, complex double *c, complex dou
         bet=b[j]-a[j]*gam[j];
         if(bet == 0.0){
             fprintf(stderr,"Error fatal!\n");
-            system("kill -2");
+            return;
         }
         u[j]=(r[j]-a[j]*u[j-1])/bet;
     }
@@ -75,15 +76,21 @@ double interpol(double* x, double* fx, int N, int j, double x0, double delta){
  * Return:
  *  a single value F(x,y)
  * */
+#define X(i) (-(prm->limit)+(i)*dx)
+#define Y(j) (-(prm->limit)+(j)*dy)
 double interpol2D (double *f, int i, int j, double x0, double y0, State *prm) {
-    double *x = prm->x;
-    double *y = prm->y;
+/*    double *x = prm->x;
+    double *y = prm->y;*/
     double dx = prm->dx; 
     double dy = prm->dy;
 
-    return 1./(dx*dy)*(f[0]*(x[i+1]-x0)*(y[j+1]-y0)+f[1]*(x0-x[i])*(y[j+1]-y0)
-            +f[2]*(x[i+1]-x0)*(y0-y[j])+f[3]*(x0-x[i])*(y0-y[j]));
+/*  return 1./(dx*dy)*(f[0]*(x[i+1]-x0)*(y[j+1]-y0)+f[1]*(x0-x[i])*(y[j+1]-y0)
+            +f[2]*(x[i+1]-x0)*(y0-y[j])+f[3]*(x0-x[i])*(y0-y[j]));*/
+    return 1./(dx*dy)*(f[0]*(X(i+1)-x0)*(Y(j+1)-y0)+f[1]*(x0-X(i))*(Y(j+1)-y0)
+            +f[2]*(X(i+1)-x0)*(y0-Y(j))+f[3]*(x0-X(i))*(y0-Y(j)));
 }
+#undef X
+#undef Y
 
 
 #define F(i,j) f[(xdim*(j)+(i))]
@@ -97,10 +104,10 @@ double interpol2D (double *f, int i, int j, double x0, double y0, State *prm) {
  * prm = structure containing state parameters
  */
 complex double simpson2d (complex double *f, State *prm){
-    int xdim = prm->xdim;//(*((struct state_struct*)prm)).xdim;
-    int ydim = prm->ydim;//(*((struct state_struct*)prm)).ydim;
-    double dx = prm->dx;//(*((struct state_struct*)prm)).dx; 
-    double dy = prm->dy;//(*((struct state_struct*)prm)).dy;
+    int xdim = prm->xdim;
+    int ydim = prm->ydim;
+    double dx = prm->dx;
+    double dy = prm->dy;
     complex double aux, sum = F(0,0)+F(0,ydim-2)+F(xdim-2,0)+F(xdim-2,ydim-2);
     int i, j;
 
@@ -181,25 +188,31 @@ complex double simpson2d (complex double *f, State *prm){
 } 
 #undef F
 
-
-/* VEC_CREATE */
-/* Creates vectors of x and y for 2d utility.
+/* STRUCTURE CREATION */
+/* Creates and initializes a structure containing every parameter
+ * from timestep to number of grid points and range of x and y
  * Variables:
- * x0, xf = boundaries of x
- * y0, yf = boundaries of y
- * prm = structure containing state parameters
- */
-void vec_create (double x0, double xf, double y0, double yf, State *prm){
-    int i;
-    int xdim = prm->xdim;
-    int ydim = prm->ydim;
-    
-    prm->dx = (xf-x0)/(xdim-1);
-    prm->dy = (yf-y0)/(ydim-1);
-    
-    for(i=0; i<xdim ; i++)
-            prm->x[i] = x0+i*prm->dx;
+ *  limit = max value for x and y (assumes square grid)
+ *  dim = number of points in each dimension (asumes same number)
+ *  tmax = maximum time of simulation
+ *  dt = time step
+ * Returns
+ *  out = structure of type State containing all the data
+ * */
+State struc_create (double limit, double dim, double tmax, double dt) {
+    State out;
 
-    for(i=0; i<ydim ; i++)
-            prm->y[i] = y0+i*prm->dy;
-} 
+    out.t = (double *)malloc(sizeof(double));
+    out.dt = (double *)malloc(sizeof(double));
+
+    out.xdim = dim;
+    out.ydim = dim;
+    out.limit = limit;
+    out.t_max = tmax;
+    *out.t = 0;
+    *out.dt = dt;
+    out.dx = 2*limit/(double)dim;
+    out.dy = 2*limit/(double)dim;
+
+    return out;
+}

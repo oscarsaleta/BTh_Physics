@@ -13,3 +13,4 @@ wf-plots
 *.dat
 *~
 cscope.out
+cscope.files
