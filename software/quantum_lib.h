@@ -20,7 +20,7 @@ void abs_mask(int N, double perc, int nu, double *mask);
  *  position = position to find the velocities (px,py)
  *  prm = structure containing state parameters 
  */
-void bohm_vel2D(double *v, complex double *psi,  double *position, void *prm);
+void bohm_vel2D(double *v, complex double *psi,  double *position, State *prm);
 
 
 void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), State *prm, int maxit);
@@ -52,7 +52,7 @@ void wf_static01 (complex double *psia, complex double *psib, double t, State *p
  *         1 if potential depends on time
  *  prm = pointer to struct with program parameters
  */
-void CrNi2Dexact (double *pos, complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), void *prm, int flag);
+void CrNi2Dexact (double *pos, complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), State *prm, int flag);
 
 
 
@@ -77,4 +77,4 @@ void bohm_traj2D(double *r, complex double* phi1, complex double* phi2, complex 
 
 
 void trajectoryFromFile(double *r, FILE *input, FILE *output, State *prm);
-void Qj (complex double *psi, double *r, int nt, double *Q, State *prm); 
+double Qj (complex double *psi, double *r, State *prm); 

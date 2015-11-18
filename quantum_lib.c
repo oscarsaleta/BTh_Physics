@@ -1410,21 +1410,22 @@ double Qj (complex double *psi, double *r, int nt, double *Q, State *prm) {
     double dy=prm->dy;
     int xdim=prm->xdim;
     double Qaux[4];
+    double constant=-(QUANT_h*QUANT_h/(2.*QUANT_m);
 
     i=(int)floor((r[0]-x[0])/dx);
     j=(int)floor((r[1]-y[0])/dy);
 
     /* (i,j) */
-    Qaux[0]=-(QUANT_h*QUANT_h/2*QUANT_m)*1/PSI(i,j)*((PSI(i+1,j)-2*PSI(i,j)+PSI(i-1,j))/(dx*dx)+
+    Qaux[0]=constant * 1/PSI(i,j)*((PSI(i+1,j)-2*PSI(i,j)+PSI(i-1,j))/(dx*dx)+
             (PSI(i,j+1)-2*PSI(i,j)+PSI(i,j-1))/(dy*dy));
     /* (i+1,j) */
-    Qaux[1]=-(QUANT_h*QUANT_h/2*QUANT_m)*1/PSI(i+1,j)*((PSI(i+2,j)-2*PSI(i+1,j)+PSI(i,j))/(dx*dx)+
+    Qaux[1]=constant * 1/PSI(i+1,j)*((PSI(i+2,j)-2*PSI(i+1,j)+PSI(i,j))/(dx*dx)+
             (PSI(i+1,j+1)-2*PSI(i+1,j)+PSI(i+1,j-1))/(dy*dy));
     /* (i,j+1) */
-    Qaux[2]=-(QUANT_h*QUANT_h/2*QUANT_m)*1/PSI(i,j+1)*((PSI(i+1,j+1)-2*PSI(i,j+1)+PSI(i-1,j+1))/(dx*dx)+
+    Qaux[2]=constant * 1/PSI(i,j+1)*((PSI(i+1,j+1)-2*PSI(i,j+1)+PSI(i-1,j+1))/(dx*dx)+
             (PSI(i,j+2)-2*PSI(i,j+1)+PSI(i,j))/(dy*dy));
     /* (i+1,j+1) */
-    Qaux[3]=-(QUANT_h*QUANT_h/2*QUANT_m)*1/PSI(i+1,j+1)*((PSI(i+2,j+1)-2*PSI(i+1,j+1)+PSI(i,j+1))/(dx*dx)+
+    Qaux[3]=constant * 1/PSI(i+1,j+1)*((PSI(i+2,j+1)-2*PSI(i+1,j+1)+PSI(i,j+1))/(dx*dx)+
             (PSI(i+1,j+2)-2*PSI(i+1,j+1)+PSI(i+1,j))/(dy*dy));
 
     return interpol2D(Qaux,i,j,r[0],r[1],prm);

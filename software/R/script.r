@@ -1,6 +1,6 @@
 source('/home/slenderman/git/tdg-fisica/software/R/elipsefit.r')
 
-nom=c('r2')
+nom=c('r1mQ')
 filedir="/home/slenderman/git/tdg-fisica/octubre/Radis_Bohr/"
 nom=paste0(filedir,nom)
 

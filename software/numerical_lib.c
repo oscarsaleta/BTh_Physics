@@ -72,6 +72,8 @@ double interpol(double* x, double* fx, int N, int j, double x0, double delta){
  *  j = closest y index to y0 (floor)
  *  x0, y0 = point where f has to be evaluated
  *  prm = structure containing state parameters
+ * Return:
+ *  a single value F(x,y)
  * */
 double interpol2D (double *f, int i, int j, double x0, double y0, State *prm) {
     double *x = prm->x;

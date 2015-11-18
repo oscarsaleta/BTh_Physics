@@ -7,6 +7,7 @@
 #include <complex.h>
 #include <string.h>
 #include "numerical_lib.h"
+#include "quantum_lib.h"
 
 #ifndef M_PI
 #define M_PI           3.14159265358979323846
@@ -1085,6 +1086,7 @@ void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), 
     /*RK of 6th order requires 6 steps (ie. 6 psi's) to be known to perform a step in trajectories*/
     complex double *current_psi;
     complex double *psivec[2];
+    double Q; /*quantum potential*/
 
     int max = xdim < ydim ? ydim : xdim; /*Maximum lenght between x and y*/
 
@@ -1288,13 +1290,17 @@ void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), 
         /* Update time */
         *t += dt;
 //        fprintf(stderr,"exact:: t = %10.6G\n",*t);
+
+        /* Compute Qj */
+        Q=Qj(psi,pos,prm);
+
         /* Update wavefunction */
         current_psi = psivec[1];
         for(i=0;i<xdim;i++)
             for(j=0;j<ydim;j++)
                 PSI(i,j) = CPSI(i,j);
         /* Print position */
-        fprintf(stdout, "%15.10g   %15.10g   %15.10g   %15.10G\n",pos[0],pos[1],*t,sqrt(pos[0]*pos[0]+pos[1]*pos[1]));
+        fprintf(stdout, "%15.10g   %15.10g   %15.10g   %15.10G   %15.10G\n",pos[0],pos[1],*t,sqrt(pos[0]*pos[0]+pos[1]*pos[1]),Q);
         
     }
 
@@ -1398,7 +1404,7 @@ void trajectoryFromFile(double *r, FILE *input, FILE *output, State *prm) {
 }
 
 #define PSI(i,j) psi[(j)*xdim+(i)]
-double Qj (complex double *psi, double *r, int nt, double *Q, State *prm) {
+double Qj (complex double *psi, double *r, State *prm) {
     int i,j;
     double *x=prm->x;
     double *y=prm->y;
@@ -1406,21 +1412,28 @@ double Qj (complex double *psi, double *r, int nt, double *Q, State *prm) {
     double dy=prm->dy;
     int xdim=prm->xdim;
     double Qaux[4];
+    double constant=-(QUANT_h*QUANT_h)/(2.*QUANT_m);
 
     i=(int)floor((r[0]-x[0])/dx);
     j=(int)floor((r[1]-y[0])/dy);
 
+    /* Podem necessitar Qj a un punt que no és del grid.
+     * Calculem Qj als 4 punts més propers i interpolem (2D)
+     * r es el punt on volem calcular Qj
+     * Usem diferencies finites centrades pel Laplacià
+     * */
+
     /* (i,j) */
-    Qaux[0]=-(QUANT_h*QUANT_h/2*QUANT_m)*1/PSI(i,j)*((PSI(i+1,j)-2*PSI(i,j)+PSI(i-1,j))/(dx*dx)+
+    Qaux[0]=constant * 1/PSI(i,j)*((PSI(i+1,j)-2*PSI(i,j)+PSI(i-1,j))/(dx*dx)+
             (PSI(i,j+1)-2*PSI(i,j)+PSI(i,j-1))/(dy*dy));
     /* (i+1,j) */
-    Qaux[1]=-(QUANT_h*QUANT_h/2*QUANT_m)*1/PSI(i+1,j)*((PSI(i+2,j)-2*PSI(i+1,j)+PSI(i,j))/(dx*dx)+
+    Qaux[1]=constant * 1/PSI(i+1,j)*((PSI(i+2,j)-2*PSI(i+1,j)+PSI(i,j))/(dx*dx)+
             (PSI(i+1,j+1)-2*PSI(i+1,j)+PSI(i+1,j-1))/(dy*dy));
     /* (i,j+1) */
-    Qaux[2]=-(QUANT_h*QUANT_h/2*QUANT_m)*1/PSI(i,j+1)*((PSI(i+1,j+1)-2*PSI(i,j+1)+PSI(i-1,j+1))/(dx*dx)+
+    Qaux[2]=constant * 1/PSI(i,j+1)*((PSI(i+1,j+1)-2*PSI(i,j+1)+PSI(i-1,j+1))/(dx*dx)+
             (PSI(i,j+2)-2*PSI(i,j+1)+PSI(i,j))/(dy*dy));
     /* (i+1,j+1) */
-    Qaux[3]=-(QUANT_h*QUANT_h/2*QUANT_m)*1/PSI(i+1,j+1)*((PSI(i+2,j+1)-2*PSI(i+1,j+1)+PSI(i,j+1))/(dx*dx)+
+    Qaux[3]=constant * 1/PSI(i+1,j+1)*((PSI(i+2,j+1)-2*PSI(i+1,j+1)+PSI(i,j+1))/(dx*dx)+
             (PSI(i+1,j+2)-2*PSI(i+1,j+1)+PSI(i+1,j))/(dy*dy));
 
     return interpol2D(Qaux,i,j,r[0],r[1],prm);

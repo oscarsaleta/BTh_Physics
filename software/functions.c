@@ -15,8 +15,8 @@ double V (double x, double t) {
 
 double U (double x, double y, double t){
     if (isCenter(x,y,1e-5))
-        return -1e5;
-    return -10./(sqrt(x*x+y*y));
+        return 1e5;
+    return -1./(sqrt(x*x+y*y));
 }
 
 complex double stateZero2D(double x, double y, double x0, double y0) {
@@ -48,8 +48,8 @@ complex double donut2 (double x, double y) {
     return 1/sqrt(2.)*( stateZero(x,0)*stateOne(y,0)-I*stateOne(x,0)*stateZero(y,0) );
 }
 complex double donut3 (double x, double y) {
-    return 0.5*stateTwo(x,0)*stateZero(y,0)+I/sqrt(2.)*stateOne(x,0)*stateOne(y,0)-0.5*stateZero(x,0)*stateTwo(y,0);
-    //return 1/sqrt(2.0*M_PI)*(x+I*y)*(x+I*y)*cexp(-0.5*(x*x+y*y));
+    //return 0.5*stateTwo(x,0)*stateZero(y,0)+I/sqrt(2.)*stateOne(x,0)*stateOne(y,0)-0.5*stateZero(x,0)*stateTwo(y,0);
+    return 1./sqrt(2.0*M_PI)*(x+I*y)*(x+I*y)*cexp(-0.5*(x*x+y*y));
 }
 
 complex double stateTwo(double x, double x0) {

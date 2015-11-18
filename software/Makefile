@@ -13,10 +13,10 @@ all : wavefunction trajectory area
 # =========
 wavefunction : wavefunction.o numerical_lib.o quantum_lib.o functions.o
 	$(COMPILER) -o wavefunction $(OPT) wavefunction.o numerical_lib.o quantum_lib.o functions.o $(TAIL)
-trajectory : trajectory.o numerical_lib.o quantum_lib.o
+trajectory : trajectory.o numerical_lib.o quantum_lib.o functions.o
 	$(COMPILER) -o trajectory $(OPT) trajectory.o numerical_lib.o quantum_lib.o functions.o $(TAIL)
-area : area.o
-	$(COMPILER) -o area $(OPT) area.o -lm
+area : area.o numerical_lib.o quantum_lib.o functions.o
+	$(COMPILER) -o area $(OPT) area.o numerical_lib.o quantum_lib.o functions.o $(TAIL)
 
 # ===========
 # Bibliotecas
@@ -30,7 +30,7 @@ numerical_lib.o : numerical_lib.c
 quantum_lib.o : quantum_lib.c
 	$(COMPILER) -c $(OPT) quantum_lib.c $(TAIL)
 functions.o : functions.c
-	$(COMPILER) -c $(OPT) functions.c -lm
+	$(COMPILER) -c $(OPT) functions.c $(TAIL)
 
 # ======
 # Neteja
@@ -38,6 +38,6 @@ functions.o : functions.c
 clean :
 	rm -f *.o
 realclean : clean
-	rm -f wavefunction trajectory
+	rm -f wavefunction trajectory area
 
 
