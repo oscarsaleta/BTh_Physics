@@ -9,11 +9,14 @@
 #include "functions.h"
 
 #define LIMIT 8.0
+#define GRID_DIM 251
 
 #define F1(i,j) f1[(fstruct.xdim*(j)+(i))]
 #define F2(i,j) f2[(fstruct.xdim*(j)+(i))]
 #define Ft(i,j) ft[(fstruct.xdim*(j)+(i))]
 
+#define X(i) (-LIMIT+(i)*fstruct.dx)
+#define Y(j) (-LIMIT+(j)*fstruct.dy)
 
 int main(int argc, char* argv[]){
 
@@ -43,31 +46,22 @@ int main(int argc, char* argv[]){
 
     /* INITIALIZE STRUCTURE AND STATE*/
 
-    fstruct.xdim = fstruct.ydim = GRID_DIM;
+    fstruct = struc_create(LIMIT,GRID_DIM,tmax,dt);
 
     /* Allocation of arrays and pointers*/
-    fstruct.t = (double *)malloc(sizeof(double));
-    fstruct.dt = (double *)malloc(sizeof(double));
-    fstruct.x = (double *)malloc(fstruct.xdim*sizeof(double)); assert(fstruct.x != NULL);
-    fstruct.y = (double *)malloc(fstruct.ydim*sizeof(double)); assert(fstruct.y != NULL);
     f1 = (complex double *)malloc(fstruct.xdim*fstruct.ydim*sizeof(complex double)); assert(f1 != NULL);
     f2 = (complex double *)malloc(fstruct.xdim*fstruct.ydim*sizeof(complex double)); assert(f2 != NULL);
     ft = (complex double *)malloc(fstruct.xdim*fstruct.ydim*sizeof(complex double)); assert(ft != NULL);
 
 
-    /* Initiate state structure */
-    *fstruct.t = 0;
-    *fstruct.dt = dt;
-    fstruct.t_max = tmax;
-    vec_create(xi,xf,yi,yf,&fstruct);
-
     /* Initial State */
     for (i=0; i<fstruct.xdim; i++) {
         for (j=0; j<fstruct.ydim; j++) {
-            F1(i,j) = donut1(fstruct.x[i],fstruct.y[j]);
-            F2(i,j) = donut3(fstruct.x[i],fstruct.y[j]);
+            F1(i,j) = donut1(X(i),Y(j));
+            F2(i,j) = donut3(X(i),Y(j));
         }
     }
+
     /* Imaginary time evolution */
     fprintf(stderr,"CALCULATING INITIAL WAVE FUNCTION...");
     if (a!=0)
@@ -87,7 +81,7 @@ int main(int argc, char* argv[]){
     fprintf(stderr," Done\n");
 
 
-    free(fstruct.x); free(fstruct.y); free(f1); free(f2); free(ft);
+    free(f1); free(f2); free(ft);
 
     return 0;
 }

@@ -6,7 +6,7 @@
 #define QUANT_m 1//1.67262178e-27
 #define QUANT_w 1
 #define CENTRE_POU 0
-#define IM_MAXIT 1200
+#define IM_MAXIT 2200
 //#define GRID_DIM 501
 
 double V(double x, double t);
