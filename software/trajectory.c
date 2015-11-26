@@ -22,7 +22,6 @@ int main(int argc, char* argv[]){
 
     /* Program parameters */
     State fstruct;
-    double xi=-LIMIT,xf=LIMIT,yi=-LIMIT,yf=LIMIT;
     complex double *f1,*f2,*ft;
     double dt;
     double tmax;
@@ -45,8 +44,10 @@ int main(int argc, char* argv[]){
     }
 
     /* INITIALIZE STRUCTURE AND STATE*/
-
     fstruct = struc_create(LIMIT,GRID_DIM,tmax,dt);
+    fprintf(stderr,"xdim=%d ydim=%d lim=%g tmax=%g t=%g dt=%g dx=%g dy=%g\n",
+            fstruct.xdim,fstruct.ydim,fstruct.limit,fstruct.t_max,*fstruct.t,
+            *fstruct.dt,fstruct.dx,fstruct.dy);
 
     /* Allocation of arrays and pointers*/
     f1 = (complex double *)malloc(fstruct.xdim*fstruct.ydim*sizeof(complex double)); assert(f1 != NULL);
