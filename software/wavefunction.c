@@ -72,11 +72,11 @@ int main(int argc, char* argv[]){
             Ft(i,j) = a*F1(i,j)+b*F2(i,j);
         }
     }
-    //print_qwave2D(stdout,ft,&fstruct);
+    print_qwave2D(stdout,ft,&fstruct);
     fprintf(stderr," Done\n");
 
     fprintf(stderr,"CALCULATING WAVE FUNCTION EVOLUTION...:");
-    CrNi2D_wf(ft,V,V,U,&fstruct,stdout);
+    //CrNi2D_wf(ft,V,V,U,&fstruct,stdout);
     
     fprintf(stderr," Done\n");
 

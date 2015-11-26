@@ -14,8 +14,9 @@ double V (double x, double t) {
 }
 
 double U (double x, double y, double t){
-    if (isCenter(x,y,1e-5))
-        return 1e5;
+    double tol = 1e-5;
+    if (isCenter(x,y,tol))
+        return 1./tol;
     return -1./(sqrt(x*x+y*y));
 }
 
