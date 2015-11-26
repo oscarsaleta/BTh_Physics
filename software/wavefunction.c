@@ -9,7 +9,7 @@
 #include "functions.h"
 
 #define LIMIT 8.0
-#define GRID_DIM 251
+#define GRID_DIM 551
 
 #define F1(i,j) f1[(fstruct.xdim*(j)+(i))]
 #define F2(i,j) f2[(fstruct.xdim*(j)+(i))]
