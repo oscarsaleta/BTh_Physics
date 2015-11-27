@@ -518,7 +518,7 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
 #define BETAX(i,j) beta_x[(xdim*(j)+(i))]
 #define BETAY(i,j) beta_y[(xdim*(j)+(i))]
 #define X(i) (-(prm->limit)+(i)*dx)
-#define Y(i) (-(prm->limit)+(i)*dy)
+#define Y(j) (-(prm->limit)+(j)*dy)
 void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(double, double), double (*U)(double, double, double), State *prm, int maxit) {
     /*Reading the struct*/
 //  double *x = prm->x;
@@ -565,12 +565,8 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
     /* Let the main loop begin!
      *
      * This loop solves the Schrödinger equation for the system using
-     *  the Crank-Nicolson method, and computes 6 psi at different times.
-     * These psi's are used to take a step in the particles trajectories using
-     *  an adaptative Runge Kutta 6th order implicit method with adaptative time-step.
-     *  If the method fails to reach the desired accuracy, the CN and RK are repeated
-     *  with a new dt (inner loop).
-     * The main loop runs over the whole time domain of the problem.
+     * imaginary time. We perform half step in x, one in y and half
+     * in x.
      * */
     for (k=0; k<maxit; k++) {
 
@@ -797,6 +793,7 @@ void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), 
      * The main loop runs over the whole time domain of the problem.
      * */
     while (*t < t_max) {
+        fprintf(stderr,"tr:: t = %10.6G\n",*t);
 
         for(k=0;k<2;k++) {
             current_psi = psivec[k];

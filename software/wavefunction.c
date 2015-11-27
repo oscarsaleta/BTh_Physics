@@ -9,7 +9,7 @@
 #include "functions.h"
 
 #define LIMIT 8.0
-#define GRID_DIM 551
+#define GRID_DIM 250
 
 #define F1(i,j) f1[(fstruct.xdim*(j)+(i))]
 #define F2(i,j) f2[(fstruct.xdim*(j)+(i))]
@@ -41,7 +41,7 @@ int main(int argc, char* argv[]){
     }
 
     /* INITIALIZE STRUCTURE AND STATE*/
-    fstruct = struc_create(LIMIT,GRID_DIM,tmax,dt);
+    fstruct = struct_init(LIMIT,GRID_DIM,tmax,dt);
     fprintf(stderr,"xdim=%d ydim=%d lim=%g tmax=%g t=%g dt=%g dx=%g dy=%g\n",
             fstruct.xdim,fstruct.ydim,fstruct.limit,fstruct.t_max,*fstruct.t,
             *fstruct.dt,fstruct.dx,fstruct.dy);
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]){
             F2(i,j) = donut3(X(i),Y(j));
         }
     }
-    //print_qwave2D(stdout,f2,&fstruct);
+    print_qwave2D(stdout,f2,&fstruct);
     
     /* Imaginary time evolution */
     fprintf(stderr,"CALCULATING INITIAL WAVE FUNCTION...");

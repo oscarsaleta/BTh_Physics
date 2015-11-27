@@ -199,7 +199,7 @@ complex double simpson2d (complex double *f, State *prm){
  * Returns
  *  out = structure of type State containing all the data
  * */
-State struc_create (double limit, double dim, double tmax, double dt) {
+State struct_init (double limit, double dim, double tmax, double dt) {
     State out;
 
     out.t = (double *)malloc(sizeof(double));
@@ -211,8 +211,8 @@ State struc_create (double limit, double dim, double tmax, double dt) {
     out.t_max = tmax;
     *out.t = 0;
     *out.dt = dt;
-    out.dx = 2*limit/(double)dim;
-    out.dy = 2*limit/(double)dim;
+    out.dx = 2*limit/(double)(dim+1);
+    out.dy = 2*limit/(double)(dim+1);
 
     return out;
 }

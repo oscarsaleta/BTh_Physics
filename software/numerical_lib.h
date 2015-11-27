@@ -14,4 +14,4 @@ double interpol2D (double *f,  int i, int j, double x0, double y0, State *prm);
 
 complex double simpson2d (complex double *f, State *prm);
 
-State struc_create (double limit, double dim, double tmax, double dt);
+State struct_init (double limit, double dim, double tmax, double dt);
