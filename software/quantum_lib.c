@@ -354,8 +354,9 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
      *  with a new dt (inner loop).
      * The main loop runs over the whole time domain of the problem.
      * */
-    while (*t < t_max) {
-        fprintf(stderr,"wf:: t = %10.6G\n",*t);
+    while (*t <= t_max) {
+        fprintf(stderr,"[wf: %3.0lf]\r",(*t/t_max*100));
+        fflush(stderr);
 
         alpha_x = I*QUANT_h*dt/(8*QUANT_m*dx*dx); /*We're applying only 1/2 of H_x in each x loop*/
         alpha_y = I*QUANT_h*dt/(4*QUANT_m*dy*dy);
@@ -482,6 +483,7 @@ void CrNi2D_wf (complex double *psi, double (*Vx)(double, double), double (*Vy)(
             print_qwave2D(output,psi,prm);
         
     }
+    fprintf(stderr,"\n");
 
     free(A_x); free(A_y);
     free(B); free(r);
@@ -569,6 +571,10 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
      * in x.
      * */
     for (k=0; k<maxit; k++) {
+
+        fprintf(stderr,"[im: %3.0lf%]\r",k/(float)maxit*100);
+        //fprintf(stderr,"im:: iteration %d of %d\r",k,maxit);
+        fflush(stderr);
 
         alpha_x = QUANT_h*dt/(8*QUANT_m*dx*dx); /*We're applying only 1/2 of H_x in each x loop*/
         alpha_y = QUANT_h*dt/(4*QUANT_m*dy*dy);
@@ -684,6 +690,7 @@ void CrNi2D_im_wf (complex double *psi, double (*Vx)(double, double), double (*V
 
 
     }
+    fprintf(stderr,"\n");
 
     free(A_x); free(A_y);
     free(B); free(r);
@@ -792,8 +799,10 @@ void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), 
      *  a Runge Kutta method (4th order) with static time-step.
      * The main loop runs over the whole time domain of the problem.
      * */
-    while (*t < t_max) {
-        fprintf(stderr,"tr:: t = %10.6G\n",*t);
+    while (*t <= t_max) {
+        fprintf(stderr,"[tr: %3.0lf%]\r",(*t/t_max*100));
+        //fprintf(stderr,"tr:: t = %5.2lf\r",*t);
+        fflush(stderr);
 
         for(k=0;k<2;k++) {
             current_psi = psivec[k];
@@ -966,6 +975,7 @@ void CrNi2D_tr (double *pos, complex double *psi, double (*Vx)(double, double), 
         fprintf(stdout, "%15.10g   %15.10g   %15.10g   %15.10G   %15.10G\n",pos[0],pos[1],*t,sqrt(pos[0]*pos[0]+pos[1]*pos[1]),Q);
         
     }
+    fprintf(stderr,"\n");
 
     free(A_x); free(A_y);
     free(B); free(r);

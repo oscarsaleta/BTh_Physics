@@ -73,14 +73,10 @@ int main(int argc, char* argv[]){
         }
     }
     //print_qwave2D(stdout,ft,&fstruct);
-    fprintf(stderr," Done\n");
 
     fprintf(stderr,"CALCULATING WAVE FUNCTION EVOLUTION...:");
     CrNi2D_wf(ft,V,V,U,&fstruct,stdout);
     
-    fprintf(stderr," Done\n");
-
-
 //  free(fstruct.x); free(fstruct.y);
     free(f1); free(f2); free(ft);
 

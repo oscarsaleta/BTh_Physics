@@ -64,7 +64,7 @@ int main(int argc, char* argv[]){
     }
 
     /* Imaginary time evolution */
-    fprintf(stderr,"CALCULATING INITIAL WAVE FUNCTION...");
+    fprintf(stderr,"CALCULATING INITIAL WAVE FUNCTION...\n");
     if (a!=0)
         CrNi2D_im_wf(f1,V,V,U,&fstruct,IM_MAXIT);
     if (b!=0)
@@ -75,12 +75,9 @@ int main(int argc, char* argv[]){
         }
     }
     //print_qwave2D(stdout,ft,&fstruct);
-    fprintf(stderr," Done\n");
 
-    fprintf(stderr,"CALCULATING TRAJECTORY: r=(%g,%g)...",r[0],r[1]);
+    fprintf(stderr,"CALCULATING TRAJECTORY: r=(%g,%g)...\n",r[0],r[1]);
     CrNi2D_tr(r,ft,V,V,U,&fstruct,0);
-    fprintf(stderr," Done\n");
-
 
     free(f1); free(f2); free(ft);
 
